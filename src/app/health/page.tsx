@@ -4,7 +4,7 @@ import { Fragment } from "react";
 // ЭТА СТРАНИЦА ТОЛЬКО ДЛЯ ТЕСТОВ И ПРОВЕРКИ РАБОТЫ API ПЖ НЕ ТРОГАЙТЕ ЭТО МОЕЕЕЕ
 // - Иван
 const HealthCheck = async () => {
-  const vacancies = await searchVacancy("", "Сарань");
+  const vacancies = await searchVacancy("", "");
 
   return (
     <div>
