@@ -17,9 +17,9 @@ export default function Home() {
     <div className="flex flex-col justify-center items-center h-screen">
       <div className="w-full h-full p-5">
         <div className="w-full flex justify-between">
-          <a href="#" className="hover:underline text-lg">
+          <Link href="#" className="hover:underline text-lg">
             Я работодатель
-          </a>
+          </Link>
           <div className="flex  gap-8 items-center">
             <Bell></Bell>
             <Button className="text-lg px-5">Войти</Button>
@@ -38,9 +38,9 @@ export default function Home() {
                 placeholder="Город"
                 className="bg-slate-100 border-none w-1/3"
               ></Input>
-              <Link href="/search">
-                <Button>Найти</Button>
-              </Link>
+              <Button asChild>
+                <Link href="/search">Найти</Link>
+              </Button>
             </div>
           </div>
           <div>
@@ -48,7 +48,7 @@ export default function Home() {
               <a className="text-orange-600" href="#">
                 Разместите свое резюме
               </a>{" "}
-              - займет меньше 10 минут
+              — займет меньше 10 минут
             </p>
           </div>
         </form>
