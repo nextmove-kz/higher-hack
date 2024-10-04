@@ -8,3 +8,4 @@
 - OpenAI API
 - Vercel / Fly.io
 - React Hook Form
+- Heroicons
