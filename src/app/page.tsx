@@ -17,7 +17,6 @@ export default function Home() {
     <div className="flex flex-col justify-center items-center h-screen">
       <div className="w-full h-full p-5">
         <div className="w-full flex justify-between">
-          <Button></Button>
           <Link href="#" className="hover:underline text-lg">
             Я работодатель
           </Link>
