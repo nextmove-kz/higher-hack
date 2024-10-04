@@ -6,7 +6,7 @@ const HealthCheck = async () => {
 
   return (
     <div>
-      <h1>Сайт работает {Date.now()}</h1>
+      <h1>OK {Date.now()}</h1>
       <h2 className="text-4xl">Список вакансий: </h2>
       {vacancies.map((vacancy) => (
         <Fragment key={vacancy.id}>
