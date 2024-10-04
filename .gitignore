@@ -37,3 +37,6 @@ next-env.d.ts
 
 # pocketbase
 /pocketbase/pb_data
+
+# environment variables
+.env
