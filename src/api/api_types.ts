@@ -40,6 +40,7 @@ export type UsersRecord = {
 }
 
 export type VacancyRecord = {
+	city?: string
 	description?: HTMLString
 	email?: string
 	salary?: number
