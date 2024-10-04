@@ -1,8 +1,10 @@
-import { listAllVacancy } from "@/api/vacancy";
+import { listAllVacancy, searchVacancy } from "@/api/vacancy";
 import { Fragment } from "react";
 
+// ЭТА СТРАНИЦА ТОЛЬКО ДЛЯ ТЕСТОВ И ПРОВЕРКИ РАБОТЫ API ПЖ НЕ ТРОГАЙТЕ ЭТО МОЕЕЕЕ
+// - Иван
 const HealthCheck = async () => {
-  const vacancies = await listAllVacancy();
+  const vacancies = await searchVacancy("", "Сарань");
 
   return (
     <div>
