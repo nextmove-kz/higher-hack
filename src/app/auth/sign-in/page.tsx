@@ -24,7 +24,7 @@ const schema = z.object({
 
 type Inputs = z.infer<typeof schema>;
 
-const SignInForm = ({ data }: { data?: any }) => {
+const SignInForm = () => {
   const {
     register,
     handleSubmit,
@@ -49,7 +49,6 @@ const SignInForm = ({ data }: { data?: any }) => {
             <InputField
               label="E-mail"
               name="email"
-              defaultValue={data?.email}
               register={register}
               size="large"
               placeholder="example@mail.com"
@@ -63,12 +62,12 @@ const SignInForm = ({ data }: { data?: any }) => {
               placeholder="Password"
               error={errors?.password}
             />
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <Checkbox />
               <span className="text-xs text-gray-400 font-medium">
                 Remember me
               </span>
-            </div>
+            </div> */}
           </div>
           <Button>Sign in</Button>
         </form>

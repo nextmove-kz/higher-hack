@@ -33,7 +33,7 @@ const schema = z.object({
 
 type Inputs = z.infer<typeof schema>;
 
-const SignUpForm = ({ data }: { data?: any }) => {
+const SignUpForm = () => {
   const {
     register,
     handleSubmit,
@@ -58,7 +58,6 @@ const SignUpForm = ({ data }: { data?: any }) => {
             <InputField
               label="Full Name"
               name="fullName"
-              defaultValue={data?.fullName}
               register={register}
               size="large"
               placeholder="John Doe"
@@ -68,7 +67,6 @@ const SignUpForm = ({ data }: { data?: any }) => {
               <InputField
                 label="E-mail"
                 name="email"
-                defaultValue={data?.email}
                 register={register}
                 size="large"
                 placeholder="example@mail.com"
@@ -77,7 +75,6 @@ const SignUpForm = ({ data }: { data?: any }) => {
               <InputField
                 label="Phone"
                 name="phone"
-                defaultValue={data?.phone}
                 register={register}
                 size="large"
                 placeholder="1234567890"
@@ -87,7 +84,6 @@ const SignUpForm = ({ data }: { data?: any }) => {
             <InputField
               label="Password"
               name="password"
-              defaultValue={data?.password}
               register={register}
               size="large"
               placeholder="Password"
