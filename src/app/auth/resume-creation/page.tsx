@@ -87,7 +87,6 @@ const SignInForm = () => {
               <BadgeInputField
                 label="Skills"
                 name="skills"
-                register={register}
                 placeholder="JavaScript, React, Node.js"
               />
               <InputField
@@ -118,6 +117,21 @@ const SignInForm = () => {
                   </p>
                 )}
               </div>
+              <div>
+                <label htmlFor="aboutMyself" className="text-xs text-gray-500">
+                  About Myself
+                </label>
+                <textarea
+                  className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+                  {...register("aboutMyself")}
+                  placeholder="About you"
+                />
+                {errors.aboutMyself?.message && (
+                  <p className="text-xs text-red-400">
+                    {errors.aboutMyself.message.toString()}
+                  </p>
+                )}
+              </div>
               <CldUploadWidget
                 uploadPreset="resume"
                 onSuccess={(result, { widget }) => {
@@ -137,13 +151,6 @@ const SignInForm = () => {
                   );
                 }}
               </CldUploadWidget>
-              {/* <textarea
-              label="About Myself"
-              name="aboutMyself"
-              register={register}
-              placeholder="Briefly describe yourself"
-              error={errors?.aboutMyself}
-            /> */}
             </div>
             <Button>Create Resume</Button>
           </form>

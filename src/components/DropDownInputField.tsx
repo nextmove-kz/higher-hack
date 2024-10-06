@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useFormContext } from "react-hook-form";
+import React, { useState } from "react";
 
 type DropdownInputProps = {
   label: string;
+  register: any;
   name: string;
   placeholder?: string;
   error?: string;
@@ -10,6 +10,7 @@ type DropdownInputProps = {
 
 const DropdownInputField = ({
   label,
+  register,
   name,
   placeholder = "Введите...",
   error,
@@ -17,24 +18,15 @@ const DropdownInputField = ({
   const [options, setOptions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
 
-  // Access React Hook Form methods
-  const { register, setValue } = useFormContext();
-
-  // Register options field and update its value in the form
-  useEffect(() => {
-    register(name); // Registering the field in React Hook Form
-    setValue(name, options); // Updating the field value in React Hook Form
-  }, [options, register, setValue, name]);
-
   const handleAddOption = () => {
     if (inputValue.trim()) {
-      setOptions((prevOptions) => [...prevOptions, inputValue]);
+      setOptions([...options, inputValue]);
       setInputValue("");
     }
   };
 
   const handleRemoveOption = (index: number) => {
-    setOptions((prevOptions) => prevOptions.filter((_, i) => i !== index));
+    setOptions(options.filter((_, i) => i !== index));
   };
 
   return (
@@ -49,7 +41,6 @@ const DropdownInputField = ({
           placeholder={placeholder}
         />
         <button
-          type="button"
           onClick={handleAddOption}
           className="absolute right-2 top-1/2 transform -translate-y-1/2 text-sm text-blue-500"
         >
@@ -65,7 +56,6 @@ const DropdownInputField = ({
             >
               <span>{option}</span>
               <button
-                type="button"
                 onClick={() => handleRemoveOption(index)}
                 className="text-red-500"
               >

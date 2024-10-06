@@ -45,10 +45,8 @@ export const signInSchema = z.object({
       .string()
       .nonempty({ message: "Work experience is required!" }),
     education: z.string().nonempty({ message: "Education is required!" }),
-    placesOfStudy: z
-      .string()
-      .nonempty({ message: "Places of study are required!" }),
-    skills: z.string().nonempty({ message: "Skills are required!" }),
+    placesOfStudy: z.array(z.string()).min(1, "At least one place of study is required"),
+    skills: z.array(z.string()).min(1, "At least one skill is required"),
     expectedSalary: z.preprocess((value) => Number(value), z
       .number({ invalid_type_error: "Salary must be a number" })
       .positive({ message: "Salary must be a positive number" })
