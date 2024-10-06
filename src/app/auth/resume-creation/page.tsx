@@ -121,13 +121,14 @@ const SignInForm = () => {
                 <div className="flex flex-wrap w-full">
                   {skills.length > 0 ? (
                     skills.map((skill, index) => (
-                      <div key={index} className="flex mt-2 w-1/4 mr-1">
+                      <div key={index} className="flex mt-2 w-1/5 mr-1">
                         <input
                           type="text"
                           {...register(`skills.${index}`, { required: true })}
                           defaultValue={skill}
-                          className="px-2 w-full py-1 text-sm font-medium rounded-full border-2 border-primary bg-primary text-primary-foreground placeholder-primary-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                          className="px-1 w-full text-sm font-medium rounded-full border-2 border-primary bg-primary text-primary-foreground placeholder-primary-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                           placeholder="Enter a skill"
+                          disabled={true}
                         />
                         <button
                           type="button"
