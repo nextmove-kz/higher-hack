@@ -32,13 +32,14 @@ const SignInForm = () => {
   const methods = useForm();
 
   const [img, setImg] = useState<any>();
+  const [options, setOptions] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [skills, setSkills] = useState<string[]>([]);
+  const [skillInput, setSkillInput] = useState<string>("");
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
   });
-
-  const [options, setOptions] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState<string>("");
 
   const handleAddOption = () => {
     if (inputValue.trim() && options.length < 3) {
@@ -47,8 +48,19 @@ const SignInForm = () => {
     }
   };
 
+  const handleAddSkill = () => {
+    if (skillInput.trim() && skills.length < 16) {
+      setSkills([...skills, skillInput]);
+      setSkillInput("");
+    }
+  };
+
   const handleRemoveOption = (index: number) => {
     setOptions(options.filter((_, i) => i !== index));
+  };
+
+  const handleRemoveSkill = (index: number) => {
+    setSkills(skills.filter((_, i) => i !== index));
   };
 
   return (
@@ -66,24 +78,77 @@ const SignInForm = () => {
                 placeholder="John Doe"
                 error={errors?.fullName}
               />
+              <div className="flex gap-2">
+                <InputField
+                  label="Age"
+                  name="age"
+                  type="number"
+                  register={register}
+                  size="medium"
+                  placeholder="30"
+                  error={errors?.age}
+                />
+                <InputField
+                  label="Work Experience"
+                  name="workExperience"
+                  register={register}
+                  size="large"
+                  placeholder="5 years in software development"
+                  error={errors?.workExperience}
+                />
+              </div>
 
-              <InputField
-                label="Age"
-                name="age"
-                type="number"
-                register={register}
-                size="large"
-                placeholder="30"
-                error={errors?.age}
-              />
-              <InputField
-                label="Work Experience"
-                name="workExperience"
-                register={register}
-                size="large"
-                placeholder="5 years in software development"
-                error={errors?.workExperience}
-              />
+              <div>
+                <label className="text-xs text-gray-500">Skills</label>
+                <div className="flex gap-1 relative">
+                  <input
+                    type="text"
+                    value={skillInput}
+                    onChange={(e) => setSkillInput(e.target.value)}
+                    className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+                    placeholder="Enter a skill"
+                    disabled={skills.length >= 16}
+                  />
+                  <button
+                    onClick={handleAddSkill}
+                    type="button"
+                    className="text-sm text-blue-500 px-3 py-1 bg-gray-100 rounded-md ml-2"
+                    disabled={skills.length >= 16}
+                  >
+                    Add
+                  </button>
+                </div>
+                <div className="flex flex-wrap w-full">
+                  {skills.length > 0 ? (
+                    skills.map((skill, index) => (
+                      <div key={index} className="flex mt-2 w-1/4 mr-1">
+                        <input
+                          type="text"
+                          {...register(`skills.${index}`, { required: true })}
+                          defaultValue={skill}
+                          className="px-2 w-full py-1 text-sm font-medium rounded-full border-2 border-primary bg-primary text-primary-foreground placeholder-primary-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                          placeholder="Enter a skill"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSkill(index)}
+                          className="text-gray-400 ml-0.5"
+                        >
+                          ✖
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-400 p-2">No skills added</p>
+                  )}
+                </div>
+
+                {skills.length >= 16 && (
+                  <p className="text-xs text-red-400">
+                    Maximum 16 skills allowed
+                  </p>
+                )}
+              </div>
 
               <InputField
                 label="Education"
@@ -136,7 +201,7 @@ const SignInForm = () => {
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-400 p-2">No items</p>
+                    <p className="text-gray-400 p-2">No places added</p>
                   )}
                 </div>
                 {options.length >= 3 && (
@@ -164,7 +229,7 @@ const SignInForm = () => {
                 placeholder="50000"
                 error={errors?.expectedSalary}
               />
-              <div className="">
+              <div>
                 <label className="text-xs text-gray-500">
                   Type of Employment
                 </label>
