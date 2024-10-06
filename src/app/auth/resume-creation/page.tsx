@@ -37,6 +37,20 @@ const SignInForm = () => {
     console.log(data);
   });
 
+  const [options, setOptions] = useState<string[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
+
+  const handleAddOption = () => {
+    if (inputValue.trim() && options.length < 3) {
+      setOptions([...options, inputValue]);
+      setInputValue("");
+    }
+  };
+
+  const handleRemoveOption = (index: number) => {
+    setOptions(options.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Card className="w-full max-w-md p-6">
@@ -79,16 +93,68 @@ const SignInForm = () => {
                 placeholder="Bachelor's degree in Computer Science"
                 error={errors?.education}
               />
-              <DropdownInputField
+              <div>
+                <label className="text-xs text-gray-500">Place of Study</label>
+                <div className="flex gap-1 relative">
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+                    placeholder="Enter a place of study"
+                  />
+                  <button
+                    onClick={handleAddOption}
+                    type="button"
+                    className="text-sm text-blue-500 px-3 py-1 bg-gray-100 rounded-md ml-2"
+                    disabled={options.length >= 3}
+                  >
+                    Add
+                  </button>
+                </div>
+
+                <div className="mt-2">
+                  {options.length > 0 ? (
+                    options.map((option, index) => (
+                      <div key={index} className="flex gap-2 mt-2 relative">
+                        <input
+                          type="text"
+                          {...register(`placesOfStudy.${index}`, {
+                            required: true,
+                          })}
+                          defaultValue={option}
+                          className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+                          placeholder="Enter a place of study"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveOption(index)}
+                          className="text-red-500 px-2 py-1"
+                        >
+                          ✖
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-400 p-2">No items</p>
+                  )}
+                </div>
+                {options.length >= 3 && (
+                  <p className="text-xs text-red-400">
+                    Maximum 3 places of study allowed
+                  </p>
+                )}
+              </div>
+              {/* <DropdownInputField
                 label="Places of Study"
                 name="placesOfStudy"
                 placeholder="Enter a places of study"
-              />
-              <BadgeInputField
+              /> */}
+              {/* <BadgeInputField
                 label="Skills"
                 name="skills"
                 placeholder="JavaScript, React, Node.js"
-              />
+              /> */}
               <InputField
                 label="Expected Salary"
                 name="expectedSalary"
