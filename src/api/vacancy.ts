@@ -1,4 +1,4 @@
-import pocketbase, { Sorting } from "./pocketbase";
+import pocketbase from "./pocketbase";
 
 export const listAllVacancy = async () => {
   const records = await pocketbase.collection("vacancy").getFullList({
@@ -10,12 +10,10 @@ export const listAllVacancy = async () => {
 export const searchVacancy = async (query: string, city: string) => {
   let filter;
   if (!query) {
-    console.log("query is empty");
     filter = `city ~ "${city}"`;
   } else {
     filter = `title ~ "${query}" && city ~ "${city}"`;
   }
-  console.log(filter);
 
   const records = await pocketbase.collection("vacancy").getFullList({
     sort: "+created",
