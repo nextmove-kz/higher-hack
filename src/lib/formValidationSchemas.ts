@@ -1,3 +1,4 @@
+import exp from "constants";
 import { z } from "zod";
 
 export const signInSchema = z.object({
@@ -41,9 +42,34 @@ export const signInSchema = z.object({
     .number({ invalid_type_error: "Age must be a number" })
     .min(18, { message: "You must be at least 18 years old" })
     ),
-    workExperience: z
-      .string()
-      .nonempty({ message: "Work experience is required!" }),
+
+// Work experience section
+  workExperience: z
+    .array(
+      z.object({
+        company: z
+          .string()
+          .min(1, { message: "Company name is required" })
+          .max(32, { message: "Company name must be no more than 32 characters" }),
+        startDate: z
+          .string()
+          .refine(
+            (date) => !isNaN(Date.parse(date)),
+            { message: "Start date must be a valid date." }
+          ),
+        endDate: z
+          .string()
+          .optional()
+          .refine(
+            (date) => date === undefined || date === "" || !isNaN(Date.parse(date)),
+            { message: "End date must be a valid date." }
+          ),
+        jobDescription: z
+          .string()
+          .min(1, { message: "Job description is required" })
+          .max(1000, { message: "Job description must be no more than 1000 characters." }),
+      })
+    ),
     education: z.string().nonempty({ message: "Education is required!" }),
     placesOfStudy: z.array(z.string()).min(1, "At least one place of study is required"),
     skills: z.array(z.string()).min(1, "At least one skill is required"),

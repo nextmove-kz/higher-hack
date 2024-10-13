@@ -10,7 +10,6 @@ import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { signUpSchema, SignUpSchema } from "@/lib/formValidationSchemas";
 // import { useRouter } from "next/navigation";
-// import { toast } from "react-toastify";
 
 const SignUpForm = () => {
   const {
