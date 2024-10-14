@@ -24,6 +24,25 @@ const SignUpForm = () => {
     console.log(data);
   });
 
+  // const onSubmit = handleSubmit(async (data) => {
+  //   try {
+  //     console.log("Submitting data:", data);
+
+  //     const signUpResponse = await signUp(
+  //       data.email,
+  //       data.password,
+  //       data.password,
+  //       "company"
+  //     );
+
+  //     console.log("Registration successful:", signUpResponse);
+
+  //   } catch (error) {
+  //     console.error("Error during sign up:", error);
+
+  //   }
+  // });
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Card className="w-full max-w-md p-6">

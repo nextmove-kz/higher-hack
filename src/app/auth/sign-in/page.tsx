@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { signInSchema, SignInSchema } from "@/lib/formValidationSchemas";
+import { signIn } from "@/api/auth";
 // import { useRouter } from "next/navigation";
 
 const SignInForm = () => {
@@ -20,8 +21,16 @@ const SignInForm = () => {
     resolver: zodResolver(signInSchema),
   });
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  // Отправка формы
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      console.log("Submitting data:", data);
+
+      const authData = await signIn(data.email, data.password);
+      console.log("Authentication successful:", authData);
+    } catch (error) {
+      console.error("Error during sign in:", error);
+    }
   });
 
   return (
