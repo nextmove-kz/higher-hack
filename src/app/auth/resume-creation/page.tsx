@@ -7,7 +7,7 @@ import {
   resumeCreationSchema,
   ResumeCreationSchema,
 } from "@/lib/formValidationSchemas";
-import { CldUploadWidget } from "next-cloudinary";
+// import { CldUploadWidget } from "next-cloudinary";
 import { useState } from "react";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
@@ -25,7 +25,8 @@ const ResumeForm = () => {
     resolver: zodResolver(resumeCreationSchema),
   });
 
-  const [img, setImg] = useState<any>();
+  // const [img, setImg] = useState<any>();
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [options, setOptions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [skills, setSkills] = useState<string[]>([]);
@@ -71,6 +72,21 @@ const ResumeForm = () => {
     setJobs(jobs.filter((_, i) => i !== index));
   };
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerFileSelect = () => {
+    document.getElementById("file-input")?.click();
+  };
+
   return (
     <div className="mx-auto p-6 bg-gray-100">
       <form className="flex flex-col gap-6" onSubmit={onSubmit}>
@@ -82,7 +98,27 @@ const ResumeForm = () => {
                   Create Your Resume
                 </h1>
                 <div className="flex items-center space-x-4 p-5 ml-2 mb-2">
-                  <CldUploadWidget
+                  <div>
+                    <img
+                      src={
+                        imagePreview ? imagePreview : "/placeholder-user.jpg"
+                      }
+                      alt="Preview"
+                      className="w-32 h-32 object-cover rounded-full cursor-pointer"
+                      onClick={triggerFileSelect}
+                    />
+                    <input
+                      id="file-input"
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) => {
+                        handleImageUpload(event);
+                        register("img").onChange(event);
+                      }}
+                      className="hidden"
+                    />
+                  </div>
+                  {/* <CldUploadWidget
                     uploadPreset="resume"
                     onSuccess={(result, { widget }) => {
                       setImg(result.info);
@@ -105,7 +141,7 @@ const ResumeForm = () => {
                         </div>
                       );
                     }}
-                  </CldUploadWidget>
+                  </CldUploadWidget> */}
                   <div>
                     <Input
                       className="block w-full text-2xl px-0 py-2 text-white placeholder-gray-200 bg-transparent border-0 border-b-2 border-gray-100 focus:ring-0 focus:border-white transition-colors duration-200"
