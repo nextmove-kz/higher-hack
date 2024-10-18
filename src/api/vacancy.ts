@@ -21,3 +21,11 @@ export const searchVacancy = async (query: string, city: string) => {
   });
   return records;
 };
+
+export const listAvailableLocations = async () => {
+  const records = await pocketbase.collection("vacancy").getFullList({
+    sort: "+created",
+  });
+  const cities = records.map((record) => record.city);
+  return [...new Set(cities)];
+};
