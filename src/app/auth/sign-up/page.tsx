@@ -33,7 +33,7 @@ const SignUpForm = () => {
       const signUpResponse = await signUpCandidate(
         data.email,
         data.password,
-        data.password
+        data.passwordConfirmation
       );
 
       console.log("Registration successful:", signUpResponse);
@@ -83,6 +83,15 @@ const SignUpForm = () => {
               register={register}
               size="large"
               placeholder="Password"
+              error={errors?.password}
+              type="password"
+            />
+            <InputField
+              label="Password confirmation"
+              name="passwordConfirmation"
+              register={register}
+              size="large"
+              placeholder="Password confirmation"
               error={errors?.password}
               type="password"
             />

@@ -32,12 +32,19 @@ export const signInSchema = z.object({
       .string()
       .min(6, { message: "Password must be at least 6 characters long!" })
       .max(20, { message: "Password must be at most 20 characters long!" }),
-    role: z
-      .enum(["user", "company"], {
-        errorMap: () => ({ message: "Please select a valid role" }),
-      })
-      .default("user"),
-  });
+
+    // role: z
+    //   .enum(["user", "company"], {
+    //     errorMap: () => ({ message: "Please select a valid role" }),
+    //   })
+    //   .default("user"),
+    passwordConfirmation: z
+      .string()
+      .min(8, "Password confirmation must be at least 8 characters long"),
+    }).refine((data) => data.password === data.passwordConfirmation, {
+      path: ["passwordConfirmation"],
+      message: "Passwords do not match",
+});
 
   export type SignUpSchema = z.infer<typeof signUpSchema>;
 
