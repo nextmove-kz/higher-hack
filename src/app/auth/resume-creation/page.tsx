@@ -7,9 +7,7 @@ import {
   resumeCreationSchema,
   ResumeCreationSchema,
 } from "@/lib/formValidationSchemas";
-// import { CldUploadWidget } from "next-cloudinary";
 import { useState } from "react";
-import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -25,7 +23,6 @@ const ResumeForm = () => {
     resolver: zodResolver(resumeCreationSchema),
   });
 
-  // const [img, setImg] = useState<any>();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [options, setOptions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
@@ -34,10 +31,10 @@ const ResumeForm = () => {
   const [jobs, setJobs] = useState<number[]>([]);
   const [jobInput, setJobInput] = useState<number>(0);
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = (data: ResumeCreationSchema) => {
     console.log("submiting data");
     console.log(data);
-  });
+  };
 
   const handleAddOption = () => {
     if (inputValue.trim() && options.length < 3) {
@@ -89,7 +86,7 @@ const ResumeForm = () => {
 
   return (
     <div className="mx-auto p-6 bg-gray-100">
-      <form className="flex flex-col gap-6" onSubmit={onSubmit}>
+      <form className="flex flex-col gap-6" onSubmit={handleSubmit(onSubmit)}>
         <div>
           <Card className="w-full max-w-4xl mx-auto bg-white shadow-lg">
             <CardHeader className=" border-gray-300 p-0 rounded-sm bg-orange-500">
@@ -117,43 +114,34 @@ const ResumeForm = () => {
                       }}
                       className="hidden"
                     />
+                    {errors.img?.message && (
+                      <p className="text-xs text-white">
+                        {errors.img.message.toString()}
+                      </p>
+                    )}
                   </div>
-                  {/* <CldUploadWidget
-                    uploadPreset="resume"
-                    onSuccess={(result, { widget }) => {
-                      setImg(result.info);
-                      widget.close();
-                    }}
-                  >
-                    {({ open }) => {
-                      return (
-                        <div
-                          className="text-xl text-white flex flex-col items-center gap-2 cursor-pointer"
-                          onClick={() => open()}
-                        >
-                          <Image
-                            src="/placeholder-user.jpg"
-                            alt=""
-                            className="rounded-full"
-                            width={150}
-                            height={150}
-                          />
-                        </div>
-                      );
-                    }}
-                  </CldUploadWidget> */}
                   <div>
                     <Input
                       className="block w-full text-2xl px-0 py-2 text-white placeholder-gray-200 bg-transparent border-0 border-b-2 border-gray-100 focus:ring-0 focus:border-white transition-colors duration-200"
                       placeholder="Type your full name..."
                       {...register("fullName")}
                     />
+                    {errors.fullName?.message && (
+                      <p className="text-xs text-white">
+                        {errors.fullName.message.toString()}
+                      </p>
+                    )}
                     <Input
                       type="number"
                       className="block w-full px-0 py-2 text-white placeholder-gray-200 bg-transparent border-0 border-b-2 border-gray-100 focus:ring-0 focus:border-white transition-colors duration-200"
                       placeholder="Type your age..."
                       {...register("age")}
                     />
+                    {errors.age?.message && (
+                      <p className="text-xs text-white">
+                        {errors.age.message.toString()}
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -214,6 +202,11 @@ const ResumeForm = () => {
                 ) : (
                   <p className="text-gray-400 p-2"></p>
                 )}
+                {errors.workExperience?.message && (
+                  <p className="text-xs text-red-400">
+                    {errors.workExperience.message.toString()}
+                  </p>
+                )}
                 <Button
                   type="button"
                   variant="outline"
@@ -242,7 +235,10 @@ const ResumeForm = () => {
                   <div className="flex flex-wrap w-full">
                     {skills.length > 0 ? (
                       skills.map((skill, index) => (
-                        <div key={index} className="flex mt-2 w-1/6 mr-1">
+                        <div
+                          key={skill + index}
+                          className="flex mt-2 w-1/6 mr-1"
+                        >
                           <input
                             type="text"
                             {...register(`skills.${index}`, {
@@ -272,7 +268,11 @@ const ResumeForm = () => {
                       Maximum 16 skills allowed
                     </p>
                   )}
-
+                  {errors.skills?.message && (
+                    <p className="text-xs text-red-400">
+                      {errors.skills.message.toString()}
+                    </p>
+                  )}
                   <Button
                     type="button"
                     variant="outline"
@@ -316,12 +316,17 @@ const ResumeForm = () => {
                           placeholder="Enter a place of study"
                         />
                       </div>
+                      {errors.placesOfStudy?.message && (
+                        <p className="text-xs text-red-400">
+                          {errors.placesOfStudy.message.toString()}
+                        </p>
+                      )}
 
                       <div className="mt-2">
                         {options.length > 0 ? (
                           options.map((option, index) => (
                             <div
-                              key={index}
+                              key={option + index}
                               className="flex gap-2 mt-2 relative"
                             >
                               <input
@@ -375,6 +380,11 @@ const ResumeForm = () => {
                       placeholder="Type your expected salary..."
                       {...register("expectedSalary")}
                     />
+                    {errors.expectedSalary?.message && (
+                      <p className="text-xs text-red-400">
+                        {errors.expectedSalary.message.toString()}
+                      </p>
+                    )}
 
                     <Label>Type of Employment</Label>
                     <select
