@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import {
   Card,
   CardHeader,
@@ -12,9 +11,12 @@ import {
 import Link from "next/link";
 import Bell from "@/components/bell";
 import ResultCard from "@/components/resultCard";
+import { searchVacancy } from "@/api/vacancy";
+import InputValue from "@/components/inputValue";
+import { log } from "console";
 export default function Home() {
   return (
-    <div className="flex flex-col justify-center items-center h-screen">
+    <div className="flex  flex-col justify-center items-center h-screen">
       <div className="w-full h-full p-5">
         <div className="w-full flex justify-between">
           <Link href="#" className="hover:underline text-lg">
@@ -25,20 +27,23 @@ export default function Home() {
             <Button className="text-lg px-5">Войти</Button>
           </div>
         </div>
-        <form className="w-full flex h-1/2 justify-center items-center flex-col gap-7">
+        <div className="w-full flex h-1/2 justify-center items-center flex-col gap-7">
+          <InputValue></InputValue>
+        </div>
+        {/* <form
+          className="w-full flex h-1/2 justify-center items-center flex-col gap-7"
+          onSubmit={resultat}
+        >
           <div className="w-1/2">
             <div className="flex h-16 bg-slate-100 px-3 py-1 gap-3 border border-slate-200   items-center rounded-lg border-solid justify-between">
               <div className="border-r-2 w-5/6">
-                <Input
-                  placeholder="Должность, ключевые слова и т.д..."
-                  className="bg-slate-100 border-none "
-                ></Input>
+                <InputValue />
               </div>
               <Input
                 placeholder="Город"
                 className="bg-slate-100 border-none w-1/3"
               ></Input>
-              <Button asChild>
+              <Button asChild type="submit">
                 <Link href="/search">Найти</Link>
               </Button>
             </div>
@@ -51,7 +56,7 @@ export default function Home() {
               — займет меньше 10 минут
             </p>
           </div>
-        </form>
+        </form> */}
       </div>
     </div>
   );
