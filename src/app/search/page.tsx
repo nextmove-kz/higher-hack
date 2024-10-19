@@ -1,4 +1,4 @@
-"use client"; // Явно указываем, что компонент должен быть клиентским
+"use client";
 import React, { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import Bell from "@/components/bell";
@@ -8,7 +8,6 @@ import { searchVacancy } from "@/api/vacancy";
 import ResultCard from "@/components/resultCard";
 import { useSearchParams } from "next/navigation";
 
-// Компонент для обработки поиска
 const SearchResults = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get("inputValue");
@@ -24,7 +23,7 @@ const SearchResults = () => {
       };
       fetchData();
     }
-  }, [query, cityValue]); // Теперь следим за query и cityValue
+  }, [query, cityValue]);
 
   return (
     <>
@@ -43,7 +42,6 @@ const SearchResults = () => {
 const Page = () => {
   const [inputValue, setInputValue] = useState("");
 
-  // Обрабатываем поиск вакансий по нажатию
   async function Search(event: React.FormEvent) {
     event.preventDefault();
     const vacancy = await searchVacancy(inputValue, "");
