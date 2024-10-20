@@ -3,6 +3,33 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import React from "react";
+import { GoTriangleLeft, GoTriangleRight } from "react-icons/go";
+
+const data = {
+  fullName: "John Doe",
+  age: 25,
+  workExperience: [
+    {
+      company: "Tech Company",
+      startDate: "2020-01-15",
+      endDate: "2022-05-20",
+      jobDescription:
+        "Worked as a full-stack developer, building web applications using Remix.",
+    },
+  ],
+  education: "Bachelor of Computer Science",
+  placesOfStudy: ["MIT", "Community College"],
+  skills: ["JavaScript", "React", "Remix"],
+  expectedSalary: 50000,
+  typeOfEmployment: "Full-time",
+  img: "/placeholder-user_2.jpg",
+  aboutMyself:
+    "I am a passionate developer with a strong interest in web technologies and software development.",
+  phone: "1234567890",
+  email: "example@mail.com",
+  viewed: 123,
+  suitable: 123,
+};
 
 const resumePage = () => {
   return (
@@ -49,7 +76,7 @@ const resumePage = () => {
               <div className="flex items-center space-x-4 p-5 ml-2 mb-2">
                 <div>
                   <Image
-                    src="/placeholder-user_2.jpg"
+                    src={data.img}
                     alt="Profile picture"
                     width={200}
                     height={200}
@@ -79,12 +106,14 @@ const resumePage = () => {
                     </svg>
                     <p className="text-2xl text-white">Bio</p>
                   </div>
-                  <div>
+                  <div className="border-t-2 border-white p-5">
                     <div className="flex">
-                      <p className="text-white text-2xl">Your full name</p>
+                      <GoTriangleRight color="white" size={24} />
+                      <p className="text-white text-2xl">{data.fullName}</p>
                     </div>
                     <div className="flex">
-                      <p className="text-white text-xl">Your age</p>
+                      <GoTriangleRight color="white" size={24} />
+                      <p className="text-white text-xl">{data.age}</p>
                     </div>
                   </div>
                 </div>
@@ -96,7 +125,9 @@ const resumePage = () => {
                 height={200}
                 className="absolute bottom-0 right-5 "
               />
-              <p className="absolute bottom-1 left-2 text-sm text-white font-medium text-center">{`Suitable vacancies: Viewed: `}</p>
+              <div className="absolute bottom-1 left-2 flex">
+                <p className=" text-md text-white font-medium text-center">{`Suitable vacancies: ${data.suitable} • Viewed: ${data.viewed}`}</p>
+              </div>
             </div>
           </CardHeader>
           <div>
@@ -120,26 +151,26 @@ const resumePage = () => {
                   <rect width="20" height="14" x="2" y="6" rx="2" />
                 </svg>
               </h2>
-              {/* {data.jobs > 0 ? (
-                data.jobs.map((job, index) => (
-                  <Card className="mb-4" key={job + index}>
+              {data.workExperience.length > 0 ? (
+                data.workExperience.map((job, index) => (
+                  <Card className="mb-4" key={index}>
                     <CardContent className="flex flex-col gap-2 p-4">
                       <div className="gap-4 relative">
                         <div>
-                          <Label>Company</Label>
+                          <Label className="text-gray-500">Company</Label>
                           <p>{job.company}</p>
                         </div>
                         <div>
-                          <Label>Start Date</Label>
+                          <Label className="text-gray-500">Start Date</Label>
                           <p>{job.startDate}</p>
                         </div>
                         <div>
-                          <Label>End Date</Label>
+                          <Label className="text-gray-500">End Date</Label>
                           <p>{job.endDate}</p>
                         </div>
                       </div>
                       <div className="mt-4">
-                        <Label>Job Description</Label>
+                        <Label className="text-gray-500">Job Description</Label>
                         <p>{job.jobDescription}</p>
                       </div>
                     </CardContent>
@@ -147,7 +178,7 @@ const resumePage = () => {
                 ))
               ) : (
                 <p>No jobs added</p>
-              )} */}
+              )}
             </section>
             <section className="border-b-2 border-gray-300 p-5">
               <h2 className="flex text-xl font-semibold mb-4 gap-2">
@@ -167,15 +198,17 @@ const resumePage = () => {
                   <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
                 </svg>
               </h2>
-              {/* {data.skills > 0 ? (
-                data.skills.map((skill, index) => (
-                  <div key={skill + index} className="flex mt-2 w-1/6 mr-1">
-                    <Badge>{skill}</Badge>
-                  </div>
-                ))
-              ) : (
-                <p>No skills added</p>
-              )} */}
+              <div className="flex gap-2">
+                {data.skills.length > 0 ? (
+                  data.skills.map((skill, index) => (
+                    <div key={skill + index}>
+                      <Badge>{skill}</Badge>
+                    </div>
+                  ))
+                ) : (
+                  <p>No skills added</p>
+                )}
+              </div>
             </section>
             <section className="border-b-2 border-gray-300 p-5">
               <h2 className="flex text-xl font-semibold mb-4 gap-2">
@@ -196,30 +229,32 @@ const resumePage = () => {
                   <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
                 </svg>
               </h2>
-              {/* {data.education > 0 ? (
+              {data.education.length > 0 ? (
                 <Card className="mb-4">
                   <CardContent className="flex flex-col gap-2 p-4">
-                    <Label>Education degree</Label>
+                    <Label className="text-gray-500">Education degree</Label>
                     <p>{data.education}</p>
                     <div className="flex gap-2 relative">
                       <div>
-                        <Label>Place of Study</Label>
-                        <p>{data.placesOfStudy}</p>
-                      </div>
-                      <div>
-                        <Label>Start Date</Label>
-                        <p>{data.startDate}</p>
-                      </div>
-                      <div>
-                        <Label>End Date</Label>
-                        <p>{data.endDate}</p>
+                        <Label className="text-gray-500">Places of Study</Label>
+                        <div className="flex gap-2">
+                          {data.placesOfStudy.length > 0 ? (
+                            data.placesOfStudy.map((place, index) => (
+                              <div key={place + index}>
+                                <p>{`${index + 1}. ${place}`}</p>
+                              </div>
+                            ))
+                          ) : (
+                            <p>No places added</p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               ) : (
                 <p>No education added</p>
-              )} */}
+              )}
             </section>
             <section className="border-b-2 border-gray-300 p-5">
               <h2 className="flex text-xl font-semibold mb-4 gap-2">
@@ -242,17 +277,46 @@ const resumePage = () => {
                   <path d="M5 18H3" />
                 </svg>
               </h2>
-              {/* <Card className="mb-4">
+              <Card className="mb-4">
                 <CardContent className="flex flex-col gap-2 p-4">
-                    <Label>Expected Salary</Label>
-                    <p>{data.expectedSalary}</p>
-                    <Label>Type of Employment</Label>
-                    <p>{data.typeOfEmployment}</p>
-                    <div className="mt-4">
-                      <Label>About Myself</Label>
-                      <p>{data.aboutMyself}</p>
-              </CardContent>
-              </Card> */}
+                  <Label className="text-gray-500">Expected Salary</Label>
+                  <p>{data.expectedSalary}</p>
+                  <Label className="text-gray-500">Type of Employment</Label>
+                  <p>{data.typeOfEmployment}</p>
+                  <div className="mt-4">
+                    <Label className="text-gray-500">About Myself</Label>
+                    <p>{data.aboutMyself}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+            <section className="p-5">
+              <h2 className="flex text-xl font-semibold mb-4 gap-2">
+                Contacts
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M16 2v2" />
+                  <path d="M7 22v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" />
+                  <path d="M8 2v2" />
+                  <circle cx="12" cy="11" r="3" />
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                </svg>
+              </h2>
+              <div className="flex flex-col gap-2">
+                <Label className="text-gray-500">Phone</Label>
+                <p>{data.phone}</p>
+                <Label className="text-gray-500">Email</Label>
+                <p>{data.email}</p>
+              </div>
             </section>
           </div>
         </Card>

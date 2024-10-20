@@ -71,6 +71,18 @@ const ResumeForm = () => {
     setJobs(jobs.filter((_, i) => i !== index));
   };
 
+  // const handleAddJob = () => {
+  //   if (jobInput !== undefined && jobs.length < 4) {
+  //     const newJob = { id: nanoid(), value: jobInput };
+  //     setJobs([...jobs, newJob]);
+  //     setJobInput(jobInput + 1);
+  //   }
+  // };
+
+  // const handleRemoveJob = (id: string) => {
+  //   setJobs(jobs.filter((job) => job.id !== id));
+  // };
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -252,52 +264,56 @@ const ResumeForm = () => {
 
                 {jobs.length > 0 ? (
                   jobs.map((job, index) => (
-                    <Card className="mb-4" key={job}>
-                      <CardContent className="flex flex-col gap-2 p-4">
-                        <div className="gap-4 relative">
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveJob(index)}
-                            className="text-red-500 px-2 py-1 absolute top-[-10px] right-[-10px]"
-                          >
-                            ✖
-                          </button>
-                          <div>
-                            <Label>Company</Label>
-                            <Input
-                              placeholder="Tech Corp"
-                              {...register(`workExperience.${index}.company`)}
+                    <div key={`${job}${index}`}>
+                      <Card className="mb-4">
+                        <CardContent className="flex flex-col gap-2 p-4">
+                          <div className="gap-4 relative">
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveJob(index)}
+                              className="text-red-500 px-2 py-1 absolute top-[-10px] right-[-10px]"
+                            >
+                              ✖
+                            </button>
+                            <div>
+                              <Label>Company</Label>
+                              <Input
+                                placeholder="Tech Corp"
+                                {...register(`workExperience.${index}.company`)}
+                              />
+                            </div>
+                            <div>
+                              <Label>Start Date</Label>
+                              <Input
+                                type="date"
+                                className="placeholder-gray-200"
+                                {...register(
+                                  `workExperience.${index}.startDate`
+                                )}
+                              />
+                            </div>
+                            <div>
+                              <Label>End Date</Label>
+                              <Input
+                                type="date"
+                                className="placeholder-gray-200"
+                                {...register(`workExperience.${index}.endDate`)}
+                              />
+                            </div>
+                          </div>
+                          <div className="mt-4">
+                            <Label>Job Description</Label>
+                            <Textarea
+                              placeholder="Describe your responsibilities and achievements..."
+                              className="min-h-[100px]"
+                              {...register(
+                                `workExperience.${index}.jobDescription`
+                              )}
                             />
                           </div>
-                          <div>
-                            <Label>Start Date</Label>
-                            <Input
-                              type="date"
-                              className="placeholder-gray-200"
-                              {...register(`workExperience.${index}.startDate`)}
-                            />
-                          </div>
-                          <div>
-                            <Label>End Date</Label>
-                            <Input
-                              type="date"
-                              className="placeholder-gray-200"
-                              {...register(`workExperience.${index}.endDate`)}
-                            />
-                          </div>
-                        </div>
-                        <div className="mt-4">
-                          <Label>Job Description</Label>
-                          <Textarea
-                            placeholder="Describe your responsibilities and achievements..."
-                            className="min-h-[100px]"
-                            {...register(
-                              `workExperience.${index}.jobDescription`
-                            )}
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                    </div>
                   ))
                 ) : (
                   <p className="text-gray-400 p-2"></p>
