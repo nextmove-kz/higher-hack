@@ -112,18 +112,18 @@ const resumePage = () => {
                         {"Name: "}
                       </p>
                       <p className="text-white text-2xl ml-2">{` ${data.fullName}`}</p>
-                      <GoTriangleLeft
+                      {/* <GoTriangleLeft
                         color="white"
                         size={24}
                         className="mt-1"
-                      />
+                      /> */}
                     </div>
                     <div className="flex">
                       <p className="text-white text-xl font-semibold">
                         {"Age: "}
                       </p>
                       <p className="text-white text-xl ml-2">{data.age}</p>
-                      <GoTriangleLeft color="white" size={24} />
+                      {/* <GoTriangleLeft color="white" size={24} /> */}
                     </div>
                   </div>
                 </div>
@@ -136,7 +136,7 @@ const resumePage = () => {
                 className="absolute bottom-0 right-5 "
               />
               <div className="absolute bottom-1 left-2 flex">
-                <p className="text-md text-white font-medium text-center">{`Suitable vacancies: ${data.suitable} • Viewed: ${data.viewed}`}</p>
+                <p className="text-md text-gray-300 font-medium text-center">{`Suitable vacancies: ${data.suitable} • Viewed: ${data.viewed}`}</p>
               </div>
             </div>
           </CardHeader>
@@ -191,7 +191,7 @@ const resumePage = () => {
               )}
             </section>
             <section className="border-b-2 border-gray-300 p-5">
-              <h2 className="flex text-xl font-semibold mb-4 gap-2">
+              <h2 className="flex text-xl font-semibold mb-4 gap-2 ">
                 Skills
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
