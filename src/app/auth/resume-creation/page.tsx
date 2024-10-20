@@ -13,6 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle } from "lucide-react";
+import { GoTriangleLeft } from "react-icons/go";
+import Image from "next/image";
 
 const ResumeForm = () => {
   const {
@@ -92,7 +94,7 @@ const ResumeForm = () => {
       >
         <div className="rounded-xl">
           <Card className="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-xl">
-            <CardHeader className="relative border-gray-300 p-0 bg-orange-500 rounded-t-xl">
+            <CardHeader className="relative border-orange-300 border-r-[9px] p-0 bg-orange-500 rounded-t-xl">
               <div className="flex flex-col border-white rounded-sm m-5">
                 <h1 className="flex text-5xl text-white font-semibold mt-5 ml-5 gap-2">
                   Create Your Resume
@@ -136,7 +138,7 @@ const ResumeForm = () => {
                         imagePreview ? imagePreview : "/placeholder-user.jpg"
                       }
                       alt="Preview"
-                      className="w-32 h-32 object-cover rounded-full cursor-pointer"
+                      className="w-36 h-36 object-cover rounded-full cursor-pointer"
                       onClick={triggerFileSelect}
                     />
                     <input
@@ -155,30 +157,75 @@ const ResumeForm = () => {
                       </p>
                     )}
                   </div>
-                  <div>
-                    <Input
-                      className="block w-full text-2xl px-0 py-2 text-white placeholder-gray-200 bg-transparent border-0 border-b-2 border-gray-100 focus:ring-0 focus:border-white transition-colors duration-200"
-                      placeholder="Type your full name..."
-                      {...register("fullName")}
-                    />
-                    {errors.fullName?.message && (
-                      <p className="text-xs text-white">
-                        {errors.fullName.message.toString()}
-                      </p>
-                    )}
-                    <Input
-                      type="number"
-                      className="block w-full px-0 py-2 text-white placeholder-gray-200 bg-transparent border-0 border-b-2 border-gray-100 focus:ring-0 focus:border-white transition-colors duration-200"
-                      placeholder="Type your age..."
-                      {...register("age")}
-                    />
-                    {errors.age?.message && (
-                      <p className="text-xs text-white">
-                        {errors.age.message.toString()}
-                      </p>
-                    )}
+                  <div className="p-5 flex flex-col">
+                    <div className="flex gap-2 mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        color="white"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        className=""
+                      >
+                        <rect width="8" height="4" x="8" y="2" rx="1" />
+                        <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-.5" />
+                        <path d="M16 4h2a2 2 0 0 1 1.73 1" />
+                        <path d="M8 18h1" />
+                        <path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
+                      </svg>
+                      <p className="text-2xl text-white">Bio</p>
+                    </div>
+                    <div>
+                      <div className="flex">
+                        <Input
+                          className="block w-full text-2xl px-0 py-2 text-white placeholder-gray-200 bg-transparent border-0 border-b-2 border-gray-100 focus:ring-0 focus:border-white transition-colors duration-200"
+                          placeholder="Type your full name..."
+                          {...register("fullName")}
+                        />
+                        {/* <GoTriangleLeft
+                          color="white"
+                          size={24}
+                          className="ml-2 mt-2"
+                        /> */}
+                      </div>
+                      {errors.fullName?.message && (
+                        <p className="text-xs text-white">
+                          {errors.fullName.message.toString()}
+                        </p>
+                      )}
+                      <div className="flex">
+                        <Input
+                          type="number"
+                          className="block w-full px-0 py-2 text-white placeholder-gray-200 bg-transparent border-0 border-b-2 border-gray-100 focus:ring-0 focus:border-white transition-colors duration-200"
+                          placeholder="Type your age..."
+                          {...register("age")}
+                        />
+                        {/* <GoTriangleLeft
+                          color="white"
+                          size={24}
+                          className="ml-2 mt-4"
+                        /> */}
+                      </div>
+                      {errors.age?.message && (
+                        <p className="text-xs text-white">
+                          {errors.age.message.toString()}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
+                <Image
+                  src="/pen-drawing-tools.png"
+                  alt=""
+                  width={200}
+                  height={200}
+                  className="absolute bottom-0 right-5 "
+                />
               </div>
             </CardHeader>
             <div>
@@ -316,7 +363,6 @@ const ResumeForm = () => {
                             defaultValue={skill}
                             className="px-1 w-full text-sm font-medium rounded-full border-2 border-primary bg-primary text-primary-foreground placeholder-primary-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                             placeholder="Enter a skill"
-                            disabled={true}
                           />
                           <button
                             type="button"
