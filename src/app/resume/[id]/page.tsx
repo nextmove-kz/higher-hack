@@ -311,12 +311,14 @@ const resumePage = () => {
                   <rect x="3" y="4" width="18" height="18" rx="2" />
                 </svg>
               </h2>
-              <div className="flex flex-col gap-2">
-                <Label className="text-gray-500">Phone</Label>
-                <p>{data.phone}</p>
-                <Label className="text-gray-500">Email</Label>
-                <p>{data.email}</p>
-              </div>
+              <Card className="mb-4">
+                <CardContent className="flex flex-col gap-2 p-4">
+                  <Label className="text-gray-500">Phone</Label>
+                  <p>{data.phone}</p>
+                  <Label className="text-gray-500">Email</Label>
+                  <p>{data.email}</p>
+                </CardContent>
+              </Card>
             </section>
           </div>
         </Card>
