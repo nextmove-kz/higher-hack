@@ -190,7 +190,7 @@ const ResumeForm = () => {
                         <path d="M8 18h1" />
                         <path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
                       </svg>
-                      <p className="text-2xl text-white">Bio</p>
+                      <p className="text-2xl text-white font-semibold">Bio</p>
                     </div>
                     <div>
                       <div className="flex">

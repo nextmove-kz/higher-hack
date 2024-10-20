@@ -37,7 +37,7 @@ const resumePage = () => {
       <div className="rounded-xl">
         <Card className="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-xl">
           <CardHeader className="relative border-orange-300 border-r-[9px] p-0 bg-orange-500 rounded-t-xl">
-            <div className="flex flex-col border-white rounded-sm m-5">
+            <div className=" flex flex-col border-white rounded-sm m-5">
               <h1 className="flex text-5xl text-white font-semibold mt-5 ml-5 gap-2">
                 Resume
                 <svg
@@ -73,7 +73,7 @@ const resumePage = () => {
                 <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z" />
                 <circle cx="12" cy="13" r="2" />
               </svg>
-              <div className="flex items-center space-x-4 p-5 ml-2 mb-2">
+              <div className="pl-5 flex items-center space-x-4 p-2 ml-2 mb-2">
                 <div>
                   <Image
                     src={data.img}
@@ -104,16 +104,26 @@ const resumePage = () => {
                       <path d="M8 18h1" />
                       <path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
                     </svg>
-                    <p className="text-2xl text-white">Bio</p>
+                    <p className="text-2xl text-white font-semibold">Bio</p>
                   </div>
                   <div className="border-t-2 border-white p-5">
                     <div className="flex">
-                      <GoTriangleRight color="white" size={24} />
-                      <p className="text-white text-2xl">{data.fullName}</p>
+                      <p className="text-white text-2xl font-semibold">
+                        {"Name: "}
+                      </p>
+                      <p className="text-white text-2xl ml-2">{` ${data.fullName}`}</p>
+                      <GoTriangleLeft
+                        color="white"
+                        size={24}
+                        className="mt-1"
+                      />
                     </div>
                     <div className="flex">
-                      <GoTriangleRight color="white" size={24} />
-                      <p className="text-white text-xl">{data.age}</p>
+                      <p className="text-white text-xl font-semibold">
+                        {"Age: "}
+                      </p>
+                      <p className="text-white text-xl ml-2">{data.age}</p>
+                      <GoTriangleLeft color="white" size={24} />
                     </div>
                   </div>
                 </div>
@@ -126,7 +136,7 @@ const resumePage = () => {
                 className="absolute bottom-0 right-5 "
               />
               <div className="absolute bottom-1 left-2 flex">
-                <p className=" text-md text-white font-medium text-center">{`Suitable vacancies: ${data.suitable} • Viewed: ${data.viewed}`}</p>
+                <p className="text-md text-white font-medium text-center">{`Suitable vacancies: ${data.suitable} • Viewed: ${data.viewed}`}</p>
               </div>
             </div>
           </CardHeader>
