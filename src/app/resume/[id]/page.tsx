@@ -135,7 +135,7 @@ const resumePage = () => {
                 height={200}
                 className="absolute bottom-0 right-5 "
               />
-              <div className="absolute bottom-1 left-2 flex">
+              <div className="absolute bottom-1 left-6 flex">
                 <p className="text-md text-gray-300 font-medium text-center">{`Suitable vacancies: ${data.suitable} • Viewed: ${data.viewed}`}</p>
               </div>
             </div>

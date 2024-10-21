@@ -118,3 +118,36 @@ export const resumeCreationSchema = z.object({
 });
 
 export type ResumeCreationSchema = z.infer<typeof resumeCreationSchema>;
+
+export const experienceSchema = z.object({
+  workExperience: z
+    .array(
+      z.object({
+        company: z
+          .string()
+          .min(1, { message: "Company name is required" })
+          .max(32, { message: "Company name must be no more than 32 characters" }),
+        startDate: z
+          .string()
+          .refine(
+            (date) => !isNaN(Date.parse(date)),
+            { message: "Start date must be a valid date." }
+          ),
+        endDate: z
+          .string()
+          .optional()
+          .refine(
+            (date) => date === undefined || date === "" || !isNaN(Date.parse(date)),
+            { message: "End date must be a valid date." }
+          ),
+        jobDescription: z
+          .string()
+          .min(1, { message: "Job description is required" })
+          .max(1000, { message: "Job description must be no more than 1000 characters." }),
+      })
+    )
+  .optional()
+  .default([]),
+})
+
+export type experienceSchema = z.infer<typeof experienceSchema>;

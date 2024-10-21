@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
+  experienceSchema,
   resumeCreationSchema,
   ResumeCreationSchema,
 } from "@/lib/formValidationSchemas";
@@ -15,6 +16,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle } from "lucide-react";
 import { GoTriangleLeft } from "react-icons/go";
 import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import ExperienceForm from "@/components/ExperienceForm";
 
 const ResumeForm = () => {
   const {
@@ -30,10 +41,13 @@ const ResumeForm = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [skills, setSkills] = useState<string[]>([]);
   const [skillInput, setSkillInput] = useState<string>("");
-  const [jobs, setJobs] = useState<number[]>([]);
-  const [jobInput, setJobInput] = useState<number>(0);
 
   const onSubmit = (data: ResumeCreationSchema) => {
+    console.log("submiting data");
+    console.log(data);
+  };
+
+  const onSubmitExperience = (data: experienceSchema) => {
     console.log("submiting data");
     console.log(data);
   };
@@ -52,13 +66,6 @@ const ResumeForm = () => {
     }
   };
 
-  const handleAddJob = () => {
-    if (jobInput !== undefined && jobs.length < 4) {
-      setJobs([...jobs, jobInput]);
-      setJobInput(jobInput + 1);
-    }
-  };
-
   const handleRemoveOption = (index: number) => {
     setOptions(options.filter((_, i) => i !== index));
   };
@@ -67,9 +74,9 @@ const ResumeForm = () => {
     setSkills(skills.filter((_, i) => i !== index));
   };
 
-  const handleRemoveJob = (index: number) => {
-    setJobs(jobs.filter((_, i) => i !== index));
-  };
+  // const handleRemoveJob = (index: number) => {
+  //   setJobs(jobs.filter((_, i) => i !== index));
+  // };
 
   // const handleAddJob = () => {
   //   if (jobInput !== undefined && jobs.length < 4) {
@@ -261,16 +268,16 @@ const ResumeForm = () => {
                     <rect width="20" height="14" x="2" y="6" rx="2" />
                   </svg>
                 </h2>
-
-                {jobs.length > 0 ? (
+                <ExperienceForm />
+                {/* {jobs.length > 0 ? (
                   jobs.map((job, index) => (
-                    <div key={`${job}${index}`}>
+                    <div key={job}>
                       <Card className="mb-4">
                         <CardContent className="flex flex-col gap-2 p-4">
                           <div className="gap-4 relative">
                             <button
                               type="button"
-                              onClick={() => handleRemoveJob(index)}
+                              onClick={() => handleRemoveJob(job)}
                               className="text-red-500 px-2 py-1 absolute top-[-10px] right-[-10px]"
                             >
                               ✖
@@ -317,22 +324,7 @@ const ResumeForm = () => {
                   ))
                 ) : (
                   <p className="text-gray-400 p-2"></p>
-                )}
-                {errors.workExperience?.message && (
-                  <p className="text-xs text-red-400">
-                    {errors.workExperience.message.toString()}
-                  </p>
-                )}
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full mt-2"
-                  onClick={handleAddJob}
-                  disabled={jobs.length >= 12}
-                >
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Add Job
-                </Button>
+                )} */}
               </section>
 
               <section className="border-b-2 border-gray-300 p-5">
