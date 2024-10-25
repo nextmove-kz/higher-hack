@@ -19,7 +19,8 @@ const chatPage = () => {
   const id = useParams<{ id: string }>().id;
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
-  const user = getCurrentUser();
+  const user = { id: "hpb4obejqv4olxh", username: "John Doe" };
+  // const user = getCurrentUser();
 
   console.log("Current user:", user);
   if (!user) {
@@ -29,25 +30,67 @@ const chatPage = () => {
 
   console.log("Chat ID:", id);
 
+  // useEffect(() => {
+  //   const fetchMessages = async () => {
+  //     try {
+  //       if (id) {
+  //         const messagesData = await getMessagesTest();
+  //         console.log("Messages data:", messagesData);
+
+  //         const formattedMessages = messagesData.map((message: any) => ({
+  //           id: message.id,
+  //           text: message.text,
+  //           user: message.expand?.user || { username: "Unknown" },
+  //         }));
+
+  //         setMessages(formattedMessages);
+  //       } else {
+  //         console.error("No chat ID found.");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching messages:", error);
+  //     }
+  //   };
+
+  //   fetchMessages();
+  // }, [id]);
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (newMessage.trim()) {
+  //     await sendMessage(id as string, newMessage, "hpb4obejqv4olxh");
+  //     setNewMessage("");
+
+  //     // const updatedMessages = await getMessages(id as string);
+  //     const updatedMessages = await getMessagesTest();
+
+  //     const formattedMessages = updatedMessages.map((message: any) => ({
+  //       id: message.id,
+  //       text: message.text,
+  //       user: message.expand?.user || { username: "Unknown" },
+  //     }));
+  //     console.log(formattedMessages);
+
+  //     setMessages(formattedMessages);
+  //   }
+  // };
+
   useEffect(() => {
+    if (!id) return;
+
     const fetchMessages = async () => {
       try {
-        if (id) {
-          const messagesData = await getMessagesTest();
-          console.log("Messages data:", messagesData);
-
-          const formattedMessages = messagesData.map((message: any) => ({
-            id: message.id,
-            text: message.text,
-            user: message.expand?.user || { username: "Unknown" },
-          }));
-
-          setMessages(formattedMessages);
-        } else {
-          console.error("No chat ID found.");
-        }
+        const chatMessages = await getMessages(id as string);
+        console.log("Messages data:", chatMessages);
+        const formattedMessages = chatMessages.map((message: any) => ({
+          id: message.id,
+          text: message.text,
+          user: message.expand?.user || { username: "Unknown" },
+        }));
+        console.log(formattedMessages);
+        setMessages(formattedMessages);
       } catch (error) {
-        console.error("Error fetching messages:", error);
+        console.error("Failed to fetch messages:", error);
       }
     };
 
@@ -56,12 +99,11 @@ const chatPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newMessage.trim()) {
-      await sendMessage(id as string, newMessage, "hpb4obejqv4olxh");
+    if (newMessage.trim() && user) {
+      await sendMessage(id as string, newMessage, user.id);
       setNewMessage("");
 
-      // const updatedMessages = await getMessages(id as string);
-      const updatedMessages = await getMessagesTest();
+      const updatedMessages = await getMessages(id as string);
 
       const formattedMessages = updatedMessages.map((message: any) => ({
         id: message.id,
@@ -69,51 +111,9 @@ const chatPage = () => {
         user: message.expand?.user || { username: "Unknown" },
       }));
       console.log(formattedMessages);
-
       setMessages(formattedMessages);
     }
   };
-
-  //   useEffect(() => {
-  //     if (!id) return;
-
-  //     const fetchMessages = async () => {
-  //       try {
-  //         const chatMessages = await pocketbase
-  //           .collection("messages")
-  //           .getFullList({
-  //             filter: `chat = '${id}'`,
-  //             expand: "user",
-  //             sort: "created_at",
-  //           });
-  //         const formattedMessages = ;
-  //         console.log(formattedMessages);
-  //         setMessages(formattedMessages);
-  //       } catch (error) {
-  //         console.error("Failed to fetch messages:", error);
-  //       }
-  //     };
-
-  //     fetchMessages();
-  //   }, [id]);
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (newMessage.trim() && user) {
-  //     await sendMessage(id as string, newMessage, user.id);
-  //     setNewMessage("");
-
-  //     const updatedMessages = await getMessages(id as string);
-
-  //     const formattedMessages = updatedMessages.map((message: any) => ({
-  //       id: message.id,
-  //       text: message.text,
-  //       user: message.expand?.user || { username: "Unknown" },
-  //     }));
-  //     console.log(formattedMessages);
-  //     setMessages(formattedMessages);
-  //   }
-  // };
 
   const handleCopyId = () => {
     if (id) {
@@ -130,7 +130,7 @@ const chatPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen relative">
-      <div className="flex flex-col p-4 mb-4 border-b ">
+      <div className="flex flex-col p-4 mb-4 border-b sticky top-0 bg-white">
         <h1 className="text-2xl">Chat</h1>
         <div className="flex gap-2">
           <p>Chat ID:</p>
@@ -174,9 +174,9 @@ const chatPage = () => {
               fill="none"
               color="orange"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
               <path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z" />
               <path d="M6 12h16" />
