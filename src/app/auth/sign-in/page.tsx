@@ -10,7 +10,7 @@ import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
 import { signInSchema, SignInSchema } from "@/lib/formValidationSchemas";
 import { signIn } from "@/api/auth";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const SignInForm = () => {
   const {
@@ -20,6 +20,7 @@ const SignInForm = () => {
   } = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
   });
+  const router = useRouter();
 
   // Отправка формы
   const onSubmit = handleSubmit(async (data) => {
@@ -28,6 +29,7 @@ const SignInForm = () => {
 
       const authData = await signIn(data.email, data.password);
       console.log("Authentication successful:", authData);
+      router.push("/");
     } catch (error) {
       console.error("Error during sign in:", error);
     }
