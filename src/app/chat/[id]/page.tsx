@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { use } from "react";
 import { useEffect, useState } from "react";
 import { getCurrentUser, getUser } from "@/api/auth";
-import { getMessages, getMessagesTest, sendMessage } from "@/api/chat";
+import { getChat, getMessages, getMessagesTest, sendMessage } from "@/api/chat";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 
@@ -19,7 +19,10 @@ const chatPage = () => {
   const id = useParams<{ id: string }>().id;
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
-  const user = { id: "hpb4obejqv4olxh", username: "John Doe" };
+  const [copied, setCopied] = React.useState(false);
+  const [chatTitle, setChatTitle] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const user = { id: "hpb4obejqv4olxh", username: "users56183" };
   // const user = getCurrentUser();
 
   console.log("Current user:", user);
@@ -30,6 +33,7 @@ const chatPage = () => {
 
   console.log("Chat ID:", id);
 
+  // TEST REQUEST
   // useEffect(() => {
   //   const fetchMessages = async () => {
   //     try {
@@ -81,6 +85,7 @@ const chatPage = () => {
     const fetchMessages = async () => {
       try {
         const chatMessages = await getMessages(id as string);
+        const chat = await getChat(id as string);
         console.log("Messages data:", chatMessages);
         const formattedMessages = chatMessages.map((message: any) => ({
           id: message.id,
@@ -89,6 +94,7 @@ const chatPage = () => {
         }));
         console.log(formattedMessages);
         setMessages(formattedMessages);
+        setChatTitle(chat.title);
       } catch (error) {
         console.error("Failed to fetch messages:", error);
       }
@@ -99,19 +105,25 @@ const chatPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     if (newMessage.trim() && user) {
-      await sendMessage(id as string, newMessage, user.id);
-      setNewMessage("");
+      try {
+        await sendMessage(id as string, newMessage, user.id);
+        setNewMessage("");
 
-      const updatedMessages = await getMessages(id as string);
+        const updatedMessages = await getMessages(id as string);
 
-      const formattedMessages = updatedMessages.map((message: any) => ({
-        id: message.id,
-        text: message.text,
-        user: message.expand?.user || { username: "Unknown" },
-      }));
-      console.log(formattedMessages);
-      setMessages(formattedMessages);
+        const formattedMessages = updatedMessages.map((message: any) => ({
+          id: message.id,
+          text: message.text,
+          user: message.expand?.user || { username: "Unknown" },
+        }));
+        console.log(formattedMessages);
+        setMessages(formattedMessages);
+      } catch (error) {
+        console.error("Error:", error);
+        setError("Failed to send message.");
+      }
     }
   };
 
@@ -129,9 +141,9 @@ const chatPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen relative">
-      <div className="flex flex-col p-4 mb-4 border-b sticky top-0 bg-white">
-        <h1 className="text-2xl">Chat</h1>
+    <div className="flex flex-col min-h-screen relativen overflow-hidden">
+      <div className="flex flex-col p-4 mb-4 border-b fixed w-full top-0 max-h-[90px] bg-white">
+        <h1 className="text-2xl">{chatTitle}</h1>
         <div className="flex gap-2">
           <p>Chat ID:</p>
           <Badge onClick={handleCopyId} className="cursor-pointer">
@@ -139,22 +151,32 @@ const chatPage = () => {
           </Badge>
         </div>
       </div>
-      <div className="space-y-4 p-4">
+      <div className="space-y-4 p-4 pt-24 pb-16">
         {messages.length === 0 ? (
           <p>Loading messages or no messages available...</p>
         ) : (
           messages.map((message) => (
-            <div
-              key={message.id}
-              className="flex flex-col rounded-xl bg-slate-100 p-4 w-auto min-w-[350px] max-w-[650px]"
-            >
-              <strong>{message.user.username}:</strong>
-              <p className="break-words max-w-[650px] w-full">{message.text}</p>
+            <div key={message.id}>
+              {user.username === message.user.username ? (
+                <div className="inline-block rounded-xl bg-orange-100 p-4 w-auto min-w-[150px] max-w-[850px]">
+                  <strong>You:</strong>
+                  <p className="break-words max-w-[650px] w-full">
+                    {message.text}
+                  </p>
+                </div>
+              ) : (
+                <div className="inline-block rounded-xl bg-slate-100 p-4 w-auto min-w-[350px] max-w-[850px]">
+                  <strong>{message.user.username}:</strong>
+                  <p className="break-words max-w-[650px] w-full">
+                    {message.text}
+                  </p>
+                </div>
+              )}
             </div>
           ))
         )}
       </div>
-      <form onSubmit={handleSubmit} className="sticky bottom-2 m-4 pr-8 w-full">
+      <form onSubmit={handleSubmit} className="fixed bottom-2 w-[81%] ml-4">
         <div className="flex relative">
           <input
             value={newMessage}
@@ -183,6 +205,7 @@ const chatPage = () => {
             </svg>
           </button>
         </div>
+        {error && <p className="text-red-500">{error}</p>}
       </form>
     </div>
   );

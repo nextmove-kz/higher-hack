@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "../../api/auth";
 import { getAllChats, getChats } from "../../api/chat";
-import Link from "next/link";
 
 interface Chat {
   id: string;
@@ -31,11 +30,7 @@ const Chats = () => {
     fetchData();
   }, []);
 
-  return (
-    <div>
-      <h1 className="text-2xl mb-4">Chats</h1>
-    </div>
-  );
+  return <div></div>;
 };
 
 export default Chats;

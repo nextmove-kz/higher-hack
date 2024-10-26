@@ -1,5 +1,6 @@
 "use client";
 import ChatSidebar from "@/components/ChatSidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 export default function ChatLayout({
   children,
