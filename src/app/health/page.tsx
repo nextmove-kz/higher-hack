@@ -6,7 +6,7 @@ import LoginButtons from "./loginButtons";
 // ЭТА СТРАНИЦА ТОЛЬКО ДЛЯ ТЕСТОВ И ПРОВЕРКИ РАБОТЫ API ПЖ НЕ ТРОГАЙТЕ ЭТО МОЕЕЕЕ
 // - Иван
 const HealthCheck = async () => {
-  const vacancies = await searchVacancy("", "");
+  const vacancies = await searchVacancy("", "", "", "");
   const userExists = await existsUser("ivanlukov@gmail.com");
   const loggedIn = await isLoggedIn();
   let user;
