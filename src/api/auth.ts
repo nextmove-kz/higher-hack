@@ -66,3 +66,11 @@ export const existsUser = async (email: string) => {
 
   return users.totalItems > 0;
 };
+
+export const isAuthenticated = () => {
+  return pocketbase.authStore.isValid;
+};
+
+export const getCurrentUser = () => {
+  return pocketbase.authStore.model;
+};

@@ -14,17 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle } from "lucide-react";
-import { GoTriangleLeft } from "react-icons/go";
 import Image from "next/image";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import ExperienceForm from "@/components/ExperienceForm";
 
 const ResumeForm = () => {
@@ -283,13 +273,13 @@ const ResumeForm = () => {
                 <ExperienceForm />
                 {/* {jobs.length > 0 ? (
                   jobs.map((job, index) => (
-                    <div key={`${job}${index}`}>
+                    <div key={job}>
                       <Card className="mb-4">
                         <CardContent className="flex flex-col gap-2 p-4">
                           <div className="gap-4 relative">
                             <button
                               type="button"
-                              onClick={() => handleRemoveJob(index)}
+                              onClick={() => handleRemoveJob(job)}
                               className="text-red-500 px-2 py-1 absolute top-[-10px] right-[-10px]"
                             >
                               ✖

@@ -129,10 +129,10 @@ const resumePage = () => {
                 </div>
               </div>
               <Image
-                src="/pen-drawing-tools.png"
+                src="/clipboard.png"
                 alt=""
-                width={200}
-                height={200}
+                width={400}
+                height={400}
                 className="absolute bottom-0 right-5 "
               />
               <div className="absolute bottom-1 left-6 flex">
