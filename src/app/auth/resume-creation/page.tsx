@@ -80,6 +80,18 @@ const ResumeForm = () => {
   //   setJobs(jobs.filter((job) => job.id !== id));
   // };
 
+  // const handleAddJob = () => {
+  //   if (jobInput !== undefined && jobs.length < 4) {
+  //     const newJob = { id: nanoid(), value: jobInput };
+  //     setJobs([...jobs, newJob]);
+  //     setJobInput(jobInput + 1);
+  //   }
+  // };
+
+  // const handleRemoveJob = (id: string) => {
+  //   setJobs(jobs.filter((job) => job.id !== id));
+  // };
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
