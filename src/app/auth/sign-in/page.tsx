@@ -3,38 +3,36 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import InputField from "@/components/ui/inputField";
+import InputField from "@/components/InputField";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
-// import { useRouter } from "next/navigation";
-// import { toast } from "react-toastify";
-
-const schema = z.object({
-  email: z
-    .string()
-    .nonempty({ message: "Email is required!" })
-    .email({ message: "Invalid email address!" }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters long!" })
-    .max(20, { message: "Password must be at most 20 characters long!" }),
-});
-
-type Inputs = z.infer<typeof schema>;
+import { signInSchema, SignInSchema } from "@/lib/formValidationSchemas";
+import { signIn } from "@/api/auth";
+import { useRouter } from "next/navigation";
 
 const SignInForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>({
-    resolver: zodResolver(schema),
+  } = useForm<SignInSchema>({
+    resolver: zodResolver(signInSchema),
   });
+  const router = useRouter();
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  // Отправка формы
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      console.log("Submitting data:", data);
+
+      const authData = await signIn(data.email, data.password);
+      console.log("Authentication successful:", authData);
+      router.push("/");
+    } catch (error) {
+      console.error("Error during sign in:", error);
+    }
   });
 
   return (

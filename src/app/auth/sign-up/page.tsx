@@ -3,47 +3,43 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import InputField from "@/components/ui/inputField";
+import InputField from "@/components/InputField";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
+import { signUpSchema, SignUpSchema } from "@/lib/formValidationSchemas";
+import { signUpCandidate } from "@/api/auth";
+import { Label } from "@/components/ui/label";
 // import { useRouter } from "next/navigation";
-// import { toast } from "react-toastify";
-
-const schema = z.object({
-  fullName: z
-    .string()
-    .nonempty({ message: "Full name is required!" })
-    .min(2, { message: "Name must be at least 2 characters long!" }),
-  email: z
-    .string()
-    .nonempty({ message: "Email is required!" })
-    .email({ message: "Invalid email address!" }),
-  phone: z
-    .string()
-    .nonempty({ message: "Phone is required!" })
-    .min(10, { message: "Phone number must be at least 10 digits long!" })
-    .regex(/^[0-9]+$/, { message: "Phone number must contain only digits!" }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters long!" })
-    .max(20, { message: "Password must be at most 20 characters long!" }),
-});
-
-type Inputs = z.infer<typeof schema>;
 
 const SignUpForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>({
-    resolver: zodResolver(schema),
+  } = useForm<SignUpSchema>({
+    resolver: zodResolver(signUpSchema),
   });
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  // const onSubmit = handleSubmit((data) => {
+  //   console.log(data);
+  // });
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      console.log("Submitting data:", data);
+
+      const signUpResponse = await signUpCandidate(
+        data.email,
+        data.password,
+        data.passwordConfirmation
+      );
+
+      console.log("Registration successful:", signUpResponse);
+    } catch (error) {
+      console.error("Error during sign up:", error);
+    }
   });
 
   return (
@@ -88,7 +84,30 @@ const SignUpForm = () => {
               size="large"
               placeholder="Password"
               error={errors?.password}
+              type="password"
             />
+            <InputField
+              label="Password confirmation"
+              name="passwordConfirmation"
+              register={register}
+              size="large"
+              placeholder="Password confirmation"
+              error={errors?.password}
+              type="password"
+            />
+            {/* <Label>Role</Label>
+            <select
+              className="ring-[1px] ring-gray-300 p-2 rounded-md text-sm w-full"
+              {...register("role")}
+            >
+              <option value="user">user</option>
+              <option value="company">company</option>
+            </select>
+            {errors.role?.message && (
+              <p className="text-xs text-red-400">
+                {errors.role.message.toString()}
+              </p>
+            )} */}
           </div>
           <Button>Create account</Button>
         </form>

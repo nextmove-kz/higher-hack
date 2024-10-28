@@ -37,18 +37,26 @@ const InputField = ({
         hidden ? "hidden" : `flex flex-col gap-2 ${sizeClasses[size]}`
       }`}
     >
-      <label className="text-xs text-gray-500">{label}</label>
+      <div className="flex gap-1">
+        <label
+          className={
+            error?.message ? "text-xs text-red-400" : "text-xs text-gray-500"
+          }
+        >
+          {label}
+        </label>
+        {/* {error?.message && (
+          <p className="text-xs text-red-400">{error.message.toString()}</p>
+        )} */}
+      </div>
       <input
         type={type}
         {...register(name)}
-        className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
+        className="ring-[1px] ring-gray-300 p-2 rounded-md text-sm w-full"
         {...inputProps}
         defaultValue={defaultValue}
         placeholder={placeholder}
       />
-      {error?.message && (
-        <p className="text-xs text-red-400">{error.message.toString()}</p>
-      )}
     </div>
   );
 };
