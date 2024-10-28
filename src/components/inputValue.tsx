@@ -16,10 +16,10 @@ const InputValue = () => {
   return (
     <div className="w-full">
       <form
-        className="w-screen flex justify-between items-center flex-col gap-7"
+        className="w-full flex justify-between items-center flex-col gap-7"
         onSubmit={inputResult}
       >
-        <div className="">
+        <div className="w-1/2">
           <div className="flex h-16 bg-slate-100 px-3 py-1 gap-3 border border-slate-200   items-center rounded-lg border-solid justify-between">
             <div className="border-r-2 w-5/6">
               <Input
