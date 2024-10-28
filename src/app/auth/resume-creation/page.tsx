@@ -90,6 +90,18 @@ const ResumeForm = () => {
   //   setJobs(jobs.filter((job) => job.id !== id));
   // };
 
+  // const handleAddJob = () => {
+  //   if (jobInput !== undefined && jobs.length < 4) {
+  //     const newJob = { id: nanoid(), value: jobInput };
+  //     setJobs([...jobs, newJob]);
+  //     setJobInput(jobInput + 1);
+  //   }
+  // };
+
+  // const handleRemoveJob = (id: string) => {
+  //   setJobs(jobs.filter((job) => job.id !== id));
+  // };
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -271,13 +283,13 @@ const ResumeForm = () => {
                 <ExperienceForm />
                 {/* {jobs.length > 0 ? (
                   jobs.map((job, index) => (
-                    <div key={job}>
+                    <div key={`${job}${index}`}>
                       <Card className="mb-4">
                         <CardContent className="flex flex-col gap-2 p-4">
                           <div className="gap-4 relative">
                             <button
                               type="button"
-                              onClick={() => handleRemoveJob(job)}
+                              onClick={() => handleRemoveJob(index)}
                               className="text-red-500 px-2 py-1 absolute top-[-10px] right-[-10px]"
                             >
                               ✖
