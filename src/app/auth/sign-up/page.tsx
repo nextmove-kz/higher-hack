@@ -3,48 +3,45 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import InputField from "@/components/ui/inputField";
+import InputField from "@/components/InputField";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
+import { signUpSchema, SignUpSchema } from "@/lib/formValidationSchemas";
 // import { useRouter } from "next/navigation";
-// import { toast } from "react-toastify";
-
-const schema = z.object({
-  fullName: z
-    .string()
-    .nonempty({ message: "Full name is required!" })
-    .min(2, { message: "Name must be at least 2 characters long!" }),
-  email: z
-    .string()
-    .nonempty({ message: "Email is required!" })
-    .email({ message: "Invalid email address!" }),
-  phone: z
-    .string()
-    .nonempty({ message: "Phone is required!" })
-    .min(10, { message: "Phone number must be at least 10 digits long!" })
-    .regex(/^[0-9]+$/, { message: "Phone number must contain only digits!" }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters long!" })
-    .max(20, { message: "Password must be at most 20 characters long!" }),
-});
-
-type Inputs = z.infer<typeof schema>;
 
 const SignUpForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>({
-    resolver: zodResolver(schema),
+  } = useForm<SignUpSchema>({
+    resolver: zodResolver(signUpSchema),
   });
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
   });
+
+  // const onSubmit = handleSubmit(async (data) => {
+  //   try {
+  //     console.log("Submitting data:", data);
+
+  //     const signUpResponse = await signUp(
+  //       data.email,
+  //       data.password,
+  //       data.password,
+  //       "company"
+  //     );
+
+  //     console.log("Registration successful:", signUpResponse);
+
+  //   } catch (error) {
+  //     console.error("Error during sign up:", error);
+
+  //   }
+  // });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
