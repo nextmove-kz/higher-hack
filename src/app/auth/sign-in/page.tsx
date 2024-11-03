@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { signInSchema, SignInSchema } from "@/lib/formValidationSchemas";
 import { signIn } from "@/api/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { getPocketbaseErrorMessage } from "@/api/utils";
 
@@ -21,12 +21,13 @@ const SignInForm = () => {
     resolver: zodResolver(signInSchema),
   });
   const router = useRouter();
-  const toaster = useToast();
+  const searchParams = useSearchParams();
 
   // Отправка формы
   const onSubmit = handleSubmit(async (data) => {
     await signIn(data.email, data.password);
-    router.push("/");
+    const from = searchParams.get("from") || "/";
+    router.push(from);
   });
 
   return (

@@ -11,7 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { signUpSchema, SignUpSchema } from "@/lib/formValidationSchemas";
 import { signUpCandidate } from "@/api/auth";
 import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { ClientResponseError } from "pocketbase";
 import { getPocketbaseErrorMessage } from "@/api/utils";
@@ -19,6 +19,7 @@ import { getPocketbaseErrorMessage } from "@/api/utils";
 
 const SignUpForm = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
   const {
     register,
@@ -43,7 +44,8 @@ const SignUpForm = () => {
         variant: "destructive",
       });
     } else {
-      router.push("/");
+      const from = searchParams.get("from") || "/";
+      router.push(from);
     }
   });
 
