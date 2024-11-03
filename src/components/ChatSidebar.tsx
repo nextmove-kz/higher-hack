@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "@/api/auth";
+import { getUser } from "@/api/auth";
 import { getAllChats, getChats, getLatestMessages } from "@/api/chat";
 import { Search, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";

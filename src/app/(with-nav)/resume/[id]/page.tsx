@@ -33,7 +33,7 @@ const data = {
 
 const resumePage = () => {
   return (
-    <div className="mx-auto p-6 bg-gray-100">
+    <div className="mx-auto p-6">
       <div className="rounded-xl">
         <Card className="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-xl">
           <CardHeader className="relative border-orange-300 border-r-[9px] p-0 bg-orange-500 rounded-t-xl">
@@ -47,9 +47,9 @@ const resumePage = () => {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="4"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
                   <path d="m6 17 5-5-5-5" />
                   <path d="m13 17 5-5-5-5" />
@@ -63,9 +63,9 @@ const resumePage = () => {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 className="absolute top-4 right-4"
               >
                 <path d="M14 2v4a2 2 0 0 0 2 2h4" />
@@ -93,9 +93,9 @@ const resumePage = () => {
                       fill="none"
                       color="white"
                       stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       className=""
                     >
                       <rect width="8" height="4" x="8" y="2" rx="1" />
@@ -151,9 +151,9 @@ const resumePage = () => {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="1"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
                   <path d="M12 12h.01" />
                   <path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
@@ -200,9 +200,9 @@ const resumePage = () => {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="1"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
                   <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
                   <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
@@ -230,9 +230,9 @@ const resumePage = () => {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="1"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
                   <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" />
                   <path d="M22 10v6" />
@@ -276,9 +276,9 @@ const resumePage = () => {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="1"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
                   <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
                   <path d="M20 3v4" />
@@ -310,9 +310,9 @@ const resumePage = () => {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="1"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="1"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
                   <path d="M16 2v2" />
                   <path d="M7 22v-2a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" />

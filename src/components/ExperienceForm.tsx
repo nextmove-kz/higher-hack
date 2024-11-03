@@ -18,8 +18,13 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { PlusCircle } from "lucide-react";
+import { ScrollArea } from "./ui/scroll-area";
 
-const ExperienceForm = () => {
+type ExperienceFormProps = {
+  onSubmit: (a: React.FormEvent<HTMLFormElement>) => void;
+};
+
+const ExperienceForm = ({ onSubmit }: ExperienceFormProps) => {
   const {
     register,
     handleSubmit,
@@ -54,9 +59,9 @@ const ExperienceForm = () => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="1"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="mr-2 h-5 w-5"
           >
             <path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4" />
@@ -70,87 +75,96 @@ const ExperienceForm = () => {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[625px]">
-        <form action="">
-          <DialogHeader>
-            <DialogTitle>Enter Your Information</DialogTitle>
-            <DialogDescription>
-              Fill out this form with your details. Click save when you're done.
-            </DialogDescription>
-          </DialogHeader>
-          {jobs.length > 0 ? (
-            jobs.map((job, index) => (
-              <div key={job}>
-                <Card className="mb-4">
-                  <CardContent className="flex flex-col gap-2 p-4">
-                    <div className="gap-4 relative">
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveJob(job)}
-                        className="text-red-500 px-2 py-1 absolute top-[-10px] right-[-10px]"
-                      >
-                        ✖
-                      </button>
-                      <div>
-                        <Label>Company</Label>
-                        <Input
-                          placeholder="Tech Corp"
-                          {...register(`workExperience.${index}.company`)}
+        <ScrollArea className={jobs.length > 0 ? "max-h-[80vh]" : "h-full"}>
+          <form onSubmit={onSubmit}>
+            <DialogHeader>
+              <DialogTitle>Enter Your Information</DialogTitle>
+              <DialogDescription>
+                Fill out this form with your details. Click save when you're
+                done.
+              </DialogDescription>
+            </DialogHeader>
+            {jobs.length > 0 ? (
+              jobs.map((job, index) => (
+                <div key={job}>
+                  <Card className="mb-4">
+                    <CardContent className="flex flex-col gap-2 p-4">
+                      <div className="gap-4 relative">
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveJob(job)}
+                          className="text-red-500 px-2 py-1 absolute top-[-10px] right-[-10px]"
+                        >
+                          ✖
+                        </button>
+                        <div>
+                          <Label>Company</Label>
+                          <Input
+                            placeholder="Tech Corp"
+                            {...register(`workExperience.${index}.company`)}
+                          />
+                        </div>
+                        <div>
+                          <Label>Start Date</Label>
+                          <Input
+                            type="date"
+                            className="placeholder-gray-200"
+                            {...register(`workExperience.${index}.startDate`)}
+                          />
+                        </div>
+                        <div>
+                          <Label>End Date</Label>
+                          <Input
+                            type="date"
+                            className="placeholder-gray-200"
+                            {...register(`workExperience.${index}.endDate`)}
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <Label>Job Description</Label>
+                        <Textarea
+                          placeholder="Describe your responsibilities and achievements..."
+                          className="min-h-[100px]"
+                          {...register(
+                            `workExperience.${index}.jobDescription`
+                          )}
                         />
                       </div>
-                      <div>
-                        <Label>Start Date</Label>
-                        <Input
-                          type="date"
-                          className="placeholder-gray-200"
-                          {...register(`workExperience.${index}.startDate`)}
-                        />
-                      </div>
-                      <div>
-                        <Label>End Date</Label>
-                        <Input
-                          type="date"
-                          className="placeholder-gray-200"
-                          {...register(`workExperience.${index}.endDate`)}
-                        />
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <Label>Job Description</Label>
-                      <Textarea
-                        placeholder="Describe your responsibilities and achievements..."
-                        className="min-h-[100px]"
-                        {...register(`workExperience.${index}.jobDescription`)}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            ))
-          ) : (
-            <p className="text-gray-400 p-2"></p>
-          )}
-          {errors.workExperience?.message && (
-            <p className="text-xs text-red-400">
-              {errors.workExperience.message.toString()}
-            </p>
-          )}
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full mt-2"
-            onClick={handleAddJob}
-            disabled={jobs.length >= 12}
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add Job
-          </Button>
-
-          <DialogFooter className="mt-2">
-            <Button type="submit" className="w-full">
-              Save changes
+                    </CardContent>
+                  </Card>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-400 p-2"></p>
+            )}
+            {errors.workExperience?.message && (
+              <p className="text-xs text-red-400">
+                {errors.workExperience.message.toString()}
+              </p>
+            )}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full mt-2"
+              onClick={handleAddJob}
+              disabled={jobs.length >= 12}
+            >
+              <PlusCircle className="mr-2 h-4 w-4" />
+              Add Job
             </Button>
-          </DialogFooter>
-        </form>
+
+            <DialogFooter className="mt-2">
+              <Button
+                type="submit"
+                className="w-full"
+                onClick={() => setOpen(false)}
+              >
+                Save changes
+              </Button>
+            </DialogFooter>
+          </form>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
