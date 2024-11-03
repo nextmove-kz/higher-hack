@@ -1,35 +1,32 @@
+import clientPocketBase from "./client_pb";
 import { pocketbase } from "./pocketbase";
 
 export const getChats = async (userId: any) => {
-  return await pocketbase()
-    .collection("chats")
-    .getFullList({
-      filter: `users ?~ '${userId}'`,
-      expand: "users",
-    });
+  return await clientPocketBase.collection("chats").getFullList({
+    filter: `users ?~ '${userId}'`,
+    expand: "users",
+  });
 };
 
 export const getAllChats = async () => {
-  return await pocketbase()
+  return await clientPocketBase
     .collection("chats")
     .getFullList(200, { expand: "users" });
 };
 
 export const getMessagesTest = async () => {
-  return await pocketbase()
+  return await clientPocketBase
     .collection("messages")
     .getFullList(200, { expand: "user" });
 };
 
 export const getMessages = async (chatId: string) => {
-  return await pocketbase()
-    .collection("messages")
-    .getFullList({
-      filter: `chat = '${chatId}'`,
-      expand: "user, chat",
+  return await clientPocketBase.collection("messages").getFullList({
+    filter: `chat = '${chatId}'`,
+    expand: "user, chat",
 
-      // sort: 'created_at'
-    });
+    // sort: 'created_at'
+  });
 };
 
 export const sendMessage = async (
@@ -38,7 +35,7 @@ export const sendMessage = async (
   userId: string
 ) => {
   try {
-    const response = await pocketbase().collection("messages").create({
+    const response = await clientPocketBase.collection("messages").create({
       text: text,
       user: userId,
       chat: chatId,
@@ -50,7 +47,7 @@ export const sendMessage = async (
 };
 
 export const getChat = async (chatId: string) => {
-  return await pocketbase()
+  return await clientPocketBase
     .collection("chats")
     .getFirstListItem(`id = "${chatId}"`);
 };
@@ -59,7 +56,7 @@ export const getLatestMessages = async (chatIds: string[]) => {
   try {
     const latestMessages = await Promise.all(
       chatIds.map(async (chatId) => {
-        const latestMessage = await pocketbase()
+        const latestMessage = await clientPocketBase
           .collection("messages")
           .getList(1, 1, {
             filter: `chat = "${chatId}"`,

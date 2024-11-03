@@ -2,7 +2,6 @@
 
 import React, { use } from "react";
 import { useEffect, useState } from "react";
-import { getUser } from "@/api/auth";
 import { getChat, getMessages, getMessagesTest, sendMessage } from "@/api/chat";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
