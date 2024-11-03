@@ -1,15 +1,16 @@
 "use server";
-import pocketbase from "./pocketbase";
+import { pocketbase } from "./pocketbase";
 import { UsersRoleOptions } from "./api_types";
-
-// pocketbase.authStore.onChange((authData) => {
-//   console.log("authStore changed", authData);
-// });
+import { AuthModel, RecordModel } from "pocketbase";
+import { cookies } from "next/headers";
 
 export const signIn = async (email: string, password: string) => {
-  const authData = await pocketbase
+  const pb = pocketbase();
+  const authData = await pb
     .collection("users")
     .authWithPassword(email, password);
+
+  cookies().set("pb_auth", pb.authStore.exportToCookie());
 
   return authData;
 };
@@ -33,44 +34,42 @@ export const signUp = async (
   passwordConfirmation: string,
   role: UsersRoleOptions
 ) => {
-  const data = {
-    email: email,
-    password: password,
-    passwordConfirm: passwordConfirmation,
-    role: role,
-    emailVisibility: true,
-  };
-  const user = await pocketbase.collection("users").create(data);
-  const authData = await signIn(email, password);
-
-  return { user, authData };
+  try {
+    const data = {
+      email: email,
+      password: password,
+      passwordConfirm: passwordConfirmation,
+      role: role,
+      emailVisibility: true,
+    };
+    const user = await pocketbase().collection("users").create(data);
+    const authData = await signIn(email, password);
+    return { error: null, data: { user, authData } };
+  } catch (error: any) {
+    return { error: error.response, data: null };
+  }
 };
 
 export const logOut = async () => {
-  pocketbase.authStore.clear();
+  pocketbase().authStore.clear();
+  cookies().delete("pb_auth");
 };
 
 export const isLoggedIn = async () => {
-  return pocketbase.authStore.isValid;
+  return pocketbase().authStore.isValid as unknown as Promise<boolean>;
 };
 
 export const getUser = async () => {
-  return pocketbase.authStore.model;
+  return pocketbase().authStore.model as Promise<RecordModel>;
 };
 
 export const existsUser = async (email: string) => {
-  const users = await pocketbase.collection("users").getList(1, 1, {
-    filter: pocketbase.filter("email = {:email}", { email }),
-    cache: "no-cache",
-  });
+  const users = await pocketbase()
+    .collection("users")
+    .getList(1, 1, {
+      filter: pocketbase().filter("email = {:email}", { email }),
+      cache: "no-cache",
+    });
 
   return users.totalItems > 0;
-};
-
-export const isAuthenticated = () => {
-  return pocketbase.authStore.isValid;
-};
-
-export const getCurrentUser = () => {
-  return pocketbase.authStore.model;
 };

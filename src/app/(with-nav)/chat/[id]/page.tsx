@@ -2,7 +2,7 @@
 
 import React, { use } from "react";
 import { useEffect, useState } from "react";
-import { getCurrentUser, getUser } from "@/api/auth";
+import { getUser } from "@/api/auth";
 import { getChat, getMessages, getMessagesTest, sendMessage } from "@/api/chat";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -25,13 +25,10 @@ const chatPage = () => {
   const user = { id: "hpb4obejqv4olxh", username: "users56183" };
   // const user = getCurrentUser();
 
-  console.log("Current user:", user);
   if (!user) {
     console.error("User is not authenticated!");
     return [];
   }
-
-  console.log("Chat ID:", id);
 
   // TEST REQUEST
   // useEffect(() => {

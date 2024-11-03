@@ -45,9 +45,9 @@ const InputField = ({
         >
           {label}
         </label>
-        {/* {error?.message && (
+        {error?.message && (
           <p className="text-xs text-red-400">{error.message.toString()}</p>
-        )} */}
+        )}
       </div>
       <input
         type={type}

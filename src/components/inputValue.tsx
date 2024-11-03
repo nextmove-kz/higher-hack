@@ -4,7 +4,8 @@ import { Input } from "./ui/input";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import Link from "next/link";
-const InputValue = () => {
+
+const Search = () => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
   const [cityValue, setCityValue] = useState("");
@@ -44,7 +45,7 @@ const InputValue = () => {
         </div>
         <div>
           <p>
-            <Link className="text-orange-600" href="#">
+            <Link className="text-orange-600" href="/resume/create">
               Разместите свое резюме
             </Link>{" "}
             — займет меньше 10 минут
@@ -55,4 +56,4 @@ const InputValue = () => {
   );
 };
 
-export default InputValue;
+export default Search;

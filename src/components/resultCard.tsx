@@ -7,7 +7,7 @@ import { VacancyRecord, VacancyResponse } from "@/api/api_types";
 const ResultCard = ({ data }: { data: VacancyResponse }) => {
   return (
     <div className="flex justify-center w-full pb-3 ">
-      <Link href={"/openCard/" + data.id} className="w-full">
+      <Link href={"/vacancy/" + data.id} className="w-full">
         <div className="w-full bg-slate-50 border flex justify-between items-center p-6 rounded-2xl hover:shadow-lg transition-all">
           <div className="flex-col">
             <div className="flex gap-2 justify-center items-center">
@@ -31,7 +31,7 @@ const ResultCard = ({ data }: { data: VacancyResponse }) => {
           </div>
 
           <Button
-            onClick={() => (window.location.href = "/openCard/" + data.id)}
+            onClick={() => (window.location.href = "/vacancy/" + data.id)}
           >
             Перейти
           </Button>

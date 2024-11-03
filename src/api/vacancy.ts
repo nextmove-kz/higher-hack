@@ -1,7 +1,9 @@
-import pocketbase from "./pocketbase";
+"use server";
+import { pocketbase } from "./pocketbase";
 
 export const listAllVacancy = async () => {
-  const records = await pocketbase.collection("vacancy").getFullList({
+  const pb = pocketbase();
+  const records = await pb.collection("vacancy").getFullList({
     sort: "+created",
   });
   return records;
@@ -21,12 +23,15 @@ export const listAllVacancy = async () => {
 //   });
 //   return records;
 // };
+
+// TODO: Поиск по нижнему регистру
 export const searchVacancy = async (
   query: string,
   city: string,
   experience: string,
   employment_type: string
 ) => {
+  const pb = pocketbase();
   let filter = [];
 
   if (query) {
@@ -44,7 +49,7 @@ export const searchVacancy = async (
 
   const filterString = filter.join(" && ");
 
-  const records = await pocketbase.collection("vacancy").getFullList({
+  const records = await pb.collection("vacancy").getFullList({
     sort: "+created",
     filter: filterString,
   });
@@ -52,7 +57,8 @@ export const searchVacancy = async (
 };
 
 export const listAvailableLocations = async () => {
-  const records = await pocketbase.collection("vacancy").getFullList({
+  const pb = pocketbase();
+  const records = await pb.collection("vacancy").getFullList({
     sort: "+created",
   });
   const cities = records.map((record) => record.city);
@@ -60,6 +66,6 @@ export const listAvailableLocations = async () => {
 };
 
 export const vacancyById = async (id: string) =>
-  await pocketbase
+  await pocketbase()
     .collection("vacancy")
     .getOne(id, { expand: "", cache: "no-cache" });

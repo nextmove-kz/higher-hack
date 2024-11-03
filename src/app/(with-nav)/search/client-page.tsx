@@ -14,12 +14,11 @@ import { VacancyResponse } from "@/api/api_types";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "@/components/ui/dropdown";
 import { Checkbox } from "@/components/ui/checkbox";
+import Navbar from "@/components/navbar";
 
 const SearchResults = () => {
   const searchParams = useSearchParams();
@@ -190,26 +189,16 @@ const SearchPage = () => {
         experience || "",
         employment_type || ""
       );
-      console.log(vacancy);
     } catch (e) {
-      console.log("ОШИБКА СОЕДИНЕНИЯ: " + e);
+      console.error("ОШИБКА СОЕДИНЕНИЯ: " + e);
     }
   }
 
   return (
     <div className="flex flex-col justify-center items-center h-screen">
       <div className="w-full h-full p-5">
-        <div className="w-full flex justify-between">
-          <Link href="#" className="hover:underline text-lg">
-            Я работодатель
-          </Link>
-          <div className="flex gap-8 items-center">
-            <Bell />
-            <Button className="text-lg px-5">Войти</Button>
-          </div>
-        </div>
         <form
-          className="w-full flex h-1/6 mt-[10%] justify-center items-center flex-col"
+          className="w-full flex h-1/6  justify-center items-center flex-col"
           onSubmit={Search}
         >
           <div className="flex items-center gap-7 w-4/6 justify-start">

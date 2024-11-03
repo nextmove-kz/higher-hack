@@ -14,7 +14,6 @@ const Chats = () => {
   useEffect(() => {
     const fetchData = async () => {
       const user = getCurrentUser();
-      console.log("user", user);
 
       const chatsData = await getAllChats();
 
@@ -22,7 +21,6 @@ const Chats = () => {
         id: chat.id,
         title: chat.title || "Untitled Chat",
       }));
-      console.log(formattedChats);
 
       setChats(formattedChats);
     };

@@ -1,11 +1,23 @@
 import PocketBase from "pocketbase";
 import { TypedPocketBase } from "./api_types";
+import { cookies } from "next/headers";
 
-export type Sorting = "+created" | "-created";
+export function pocketbase() {
+  const pb = new PocketBase(
+    "https://pocketbase.nextmove.kz"
+  ) as TypedPocketBase;
+  pb.autoCancellation(false);
 
-const pocketbase = new PocketBase(
+  const cookie = cookies().get("pb_auth");
+  if (cookie) {
+    pb.authStore.loadFromCookie(`${cookie.value}`);
+  }
+
+  return pb;
+}
+
+const clientPocketBase = new PocketBase(
   "https://pocketbase.nextmove.kz"
 ) as TypedPocketBase;
-pocketbase.autoCancellation(false);
-
-export default pocketbase;
+clientPocketBase.autoCancellation(false);
+export default clientPocketBase;
