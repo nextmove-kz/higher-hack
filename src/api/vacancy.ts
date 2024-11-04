@@ -24,7 +24,6 @@ export const listAllVacancy = async () => {
 //   return records;
 // };
 
-// TODO: Поиск по нижнему регистру
 export const searchVacancy = async (
   query: string,
   city: string,
