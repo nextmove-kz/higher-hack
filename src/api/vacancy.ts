@@ -32,28 +32,37 @@ export const searchVacancy = async (
   employment_type: string
 ) => {
   const pb = pocketbase();
-  let filter = [];
+  let filter: string[] = [];
 
-  if (query) {
-    filter.push(`title ~ "${query}"`);
-  }
-  if (city) {
-    filter.push(`city ~ "${city}"`);
-  }
-  if (experience) {
-    filter.push(`experience ~ "${experience}"`);
-  }
-  if (employment_type) {
-    filter.push(`employment_type ~ "${employment_type}"`);
-  }
+  filter.push(`city ~ "${city}"`);
+  filter.push(`experience ~ "${experience}"`);
+  filter.push(`employment_type ~ "${employment_type}"`);
 
-  const filterString = filter.join(" && ");
+  const filterString = `${filter.join(" && ")} && (${filterCaseInsensitive(
+    query
+  )})`;
 
   const records = await pb.collection("vacancy").getFullList({
     sort: "+created",
     filter: filterString,
   });
   return records;
+};
+
+const filterCaseInsensitive = (query: string) => {
+  if (!query) return 'title ~ ""';
+
+  const capitalizedQuery = query.charAt(0).toUpperCase() + query.slice(1);
+  const queryVariants = [
+    query.toLowerCase(),
+    query.toUpperCase(),
+    query,
+    capitalizedQuery,
+  ];
+  const queryString = queryVariants.map(
+    (queryVariant) => `title ~ "${queryVariant}"`
+  );
+  return queryString.join(" || ");
 };
 
 export const listAvailableLocations = async () => {
