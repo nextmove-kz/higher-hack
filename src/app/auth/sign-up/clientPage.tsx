@@ -49,48 +49,25 @@ const ClientSignUpForm = () => {
     }
   });
 
-  const createToast = () => {
-    toast({
-      title: "Sign up successful",
-      description: "You have successfully signed up",
-    });
-  };
-
   return (
     <div className="min-h-[80vh] flex items-center justify-center ">
       <Card className="w-full max-w-md p-6">
         <form className="flex flex-col gap-6" onSubmit={onSubmit}>
-          <h1 className="text-xl font-semibold text-center">Sign up</h1>
-          <span className="text-xs text-gray-400 font-medium text-center">
-            Create your account by filling the form below
-          </span>
+          <div>
+            <h1 className="text-xl font-semibold text-center">Sign up</h1>
+            <span className="text-xs text-gray-400 font-medium text-center block mt-2">
+              Create your account by filling the form below
+            </span>
+          </div>
           <div className="flex flex-col gap-4">
             <InputField
-              label="Full Name"
-              name="fullName"
+              label="E-mail"
+              name="email"
               register={register}
               size="large"
-              placeholder="John Doe"
-              error={errors?.fullName}
+              placeholder="example@mail.com"
+              error={errors?.email}
             />
-            <div className="flex items-center gap-2">
-              <InputField
-                label="E-mail"
-                name="email"
-                register={register}
-                size="large"
-                placeholder="example@mail.com"
-                error={errors?.email}
-              />
-              <InputField
-                label="Phone"
-                name="phone"
-                register={register}
-                size="large"
-                placeholder="1234567890"
-                error={errors?.phone}
-              />
-            </div>
             <InputField
               label="Password"
               name="password"
