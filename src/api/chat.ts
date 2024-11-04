@@ -1,5 +1,4 @@
 import clientPocketBase from "./client_pb";
-import { pocketbase } from "./pocketbase";
 
 export const getChats = async (userId: any) => {
   return await clientPocketBase.collection("chats").getFullList({
