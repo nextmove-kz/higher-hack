@@ -150,44 +150,51 @@ const SearchResults = () => {
 
 const SearchPage = () => {
   const searchParams = useSearchParams();
-  const cityValue = searchParams.get("cityValue");
-  const Workexperience = searchParams.get("experience");
-  const employment_type = searchParams.get("employment_type");
-
-  const [city, setCity] = useState<string | null>(null);
-  const [experience, setExperience] = useState<string | null>(null);
-  const [workType, setWorkType] = useState<string | null>(null);
-  const [active, setActive] = useState("False");
-
-  const [inputValue, setInputValue] = useState<string | null>(null);
-
   const router = useRouter();
   const pathname = usePathname();
 
+  // Инициализируем состояния значениями из URL
+  const [city, setCity] = useState(searchParams.get("cityValue") || "");
+  const [experience, setExperience] = useState(
+    searchParams.get("experience") || ""
+  );
+  const [workType, setWorkType] = useState(
+    searchParams.get("employment_type") || ""
+  );
+  const [inputValue, setInputValue] = useState(
+    searchParams.get("inputValue") || ""
+  );
+  const [active, setActive] = useState("False");
+
+  // Обновляем URL только когда состояния меняются пользователем
   useEffect(() => {
+    // Проверяем, что это не первичная загрузка
+    const currentParams = new URLSearchParams(window.location.search);
+    const currentCity = currentParams.get("cityValue");
+    const currentExperience = currentParams.get("experience");
+    const currentWorkType = currentParams.get("employment_type");
+    const currentInput = currentParams.get("inputValue");
+
     if (
-      inputValue === null &&
-      city === null &&
-      experience === null &&
-      workType === null &&
-      active === null
-    )
-      return;
-    router.push(
-      `${pathname}?inputValue=${inputValue || ""}&cityValue=${
-        city || ""
-      }&experience=${experience || ""}&employment_type=${workType || ""}`
-    );
-  }, [inputValue, city, experience, workType]);
+      city !== currentCity ||
+      experience !== currentExperience ||
+      workType !== currentWorkType ||
+      inputValue !== currentInput
+    ) {
+      router.push(
+        `${pathname}?inputValue=${inputValue}&cityValue=${city}&experience=${experience}&employment_type=${workType}`
+      );
+    }
+  }, [inputValue, city, experience, workType, pathname, router]);
 
   async function Search(event: React.FormEvent) {
     event.preventDefault();
     try {
       const vacancy = await searchVacancy(
-        inputValue || "",
-        city || "",
-        experience || "",
-        employment_type || ""
+        inputValue,
+        city,
+        experience,
+        workType
       );
     } catch (e) {
       console.error("ОШИБКА СОЕДИНЕНИЯ: " + e);
@@ -205,6 +212,7 @@ const SearchPage = () => {
             <div className="flex h-16 bg-slate-100 px-3 py-1 border border-slate-200 w-1/2 items-center rounded-lg border-solid">
               <div className="w-full">
                 <Input
+                  value={inputValue}
                   onChange={(event) => {
                     setInputValue(event.target.value);
                   }}
@@ -217,7 +225,7 @@ const SearchPage = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">
-                  {cityValue ? cityValue : "Город"}
+                  {city || "Город"}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -256,7 +264,7 @@ const SearchPage = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">
-                  {Workexperience ? Workexperience : "Опыт работы"}
+                  {experience || "Опыт работы"}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -295,7 +303,7 @@ const SearchPage = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline">
-                  {employment_type ? employment_type : "Тип Занятости"}
+                  {workType || "Тип Занятости"}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
