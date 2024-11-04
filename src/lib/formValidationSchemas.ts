@@ -48,7 +48,7 @@ export const signInSchema = z.object({
   export type SignUpSchema = z.infer<typeof signUpSchema>;
 
 
-const MAX_FILE_SIZE = 20000000;
+const MAX_FILE_SIZE = 200000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 export const resumeCreationSchema = z.object({
@@ -88,7 +88,7 @@ export const resumeCreationSchema = z.object({
   .optional()
   .default([]),
 
-    education: z.string().nonempty({ message: "Education is required!" }),
+    education: z.enum(["bachelor", "masters", "high school", "doctorate", "college"], {errorMap: () => ({ message: "Please select a valid education level" })}),
     placesOfStudy: z.array(z.string()).optional().default([]),
     skills: z.array(z.string()).optional().default([]),
     expectedSalary: z.preprocess((value) => Number(value), z
@@ -96,21 +96,13 @@ export const resumeCreationSchema = z.object({
       .positive({ message: "Salary must be a positive number" })
     ),
     typeOfEmployment: z.enum(
-      ["Full-time", "Part-time", "Freelance", "Contract"],
+      ["full_time", "part_time", "project", "internship", "volutury"],
       {
         errorMap: () => ({ message: "Please select a valid type of employment" }),
       }
     ),
     img: z
-    .any()
-    .refine((file) => file?.size <= MAX_FILE_SIZE, {
-      message: `Max file size is${MAX_FILE_SIZE / 1000000}MB`,
-    })
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
-    )
-    .optional(),
+    .any(),
     aboutMyself: z
       .string()
       .min(10, { message: "About myself must be at least 10 characters" }),

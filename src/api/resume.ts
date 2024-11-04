@@ -1,3 +1,4 @@
+"use server";
 import { pocketbase } from "./pocketbase";
 
 export const getResume = async (id: string) => {
@@ -8,9 +9,40 @@ export const getResume = async (id: string) => {
 
 export const createResume = async (resume: any) => {
   const pb = pocketbase();
+
   const data = await pb.collection("resume").create(resume);
   return data;
 };
+
+export const createExperience = async (experiences: any) => {
+  const pb = pocketbase();
+
+  const experiencePromises = experiences.map(async (experience: any) => {
+    return await pb.collection("experience").create(experience);
+  });
+
+  const results = await Promise.all(experiencePromises);
+  return results;
+};
+
+export const createSingleExperience = async (
+  id: string,
+  company: string,
+  description: string,
+  startDate: string,
+  endDate: string
+) => {
+  const pb = pocketbase();
+  const experience = {
+    id,
+    company,
+    description,
+    startDate,
+    endDate,
+  };
+  await pb.collection("experience").create(experience);
+};
+
 
 export const hasResume = async (userId: string) => {
   const pb = pocketbase();
