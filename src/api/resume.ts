@@ -7,12 +7,12 @@ export const getResume = async (id: string) => {
   return resume;
 };
 
-export const userToResume = async (resume: string) => {
+export const userToResume = async (userId: string, resume: string) => {
   const pb = pocketbase();
-  const user = await pb.collection("users").update(resume, {
+  const updatedUser = await pb.collection("users").update(userId, {
     resume: resume,
   });
-  return user;
+  return updatedUser;
 };
 
 export const createResume = async (resume: any) => {

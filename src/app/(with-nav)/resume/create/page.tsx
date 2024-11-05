@@ -18,6 +18,7 @@ import ExperienceForm from "@/components/ExperienceForm";
 import { Experience } from "@/types/resume";
 import { createExperience, createResume, userToResume } from "@/api/resume";
 import { useRouter } from "next/navigation";
+import { getUser } from "@/api/auth";
 
 const ResumeForm = () => {
   const {
@@ -65,7 +66,12 @@ const ResumeForm = () => {
         formData.append("education", resume.placesOfStudy.join(", "));
         formData.append("employment_type", resume.typeOfEmployment);
         formData.append("about", resume.aboutMyself);
-        formData.append("img", resume.img.files[0]);
+        // formData.append("img", resume.img.files[0]);
+
+        if (resume.img) {
+          formData.append("img", resume.img.files[0]);
+        }
+
         // fileInput.addEventListener("change", function () {
         //   if (fileInput.files && fileInput.files.length > 0) {
         //     const file = fileInput.files[0];
@@ -86,9 +92,13 @@ const ResumeForm = () => {
         end_date: exp.endDate,
       }));
       const experienceData = await createExperience(experiences);
-      const userData = await userToResume(resume.id);
+      const user = await getUser();
+      console.log("user: ", user.id);
+      const userData = await userToResume(user.id, resume.id);
       console.log("submitted experience data: ", experienceData);
       console.log("test: ", experiences);
+      // const from = searchParams.get("from") || "/";
+      // router.push(from);
       // router.back();
     } catch (error) {
       console.log(error);

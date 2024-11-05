@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import React from "react";
-import { GoTriangleLeft, GoTriangleRight } from "react-icons/go";
 
 const data = {
   fullName: "John Doe",
