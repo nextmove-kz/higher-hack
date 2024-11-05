@@ -1,4 +1,5 @@
 "use server";
+import { permanentRedirect } from "next/navigation";
 import { pocketbase } from "./pocketbase";
 
 export const getResume = async (id: string) => {
@@ -15,6 +16,12 @@ export const userToResume = async (userId: string, resume: string) => {
   return updatedUser;
 };
 
+export const resumeRedirect = async (resumeId: string) => {
+  const pb = pocketbase();
+  if (resumeId) {
+    permanentRedirect(`/resume/${resumeId}`);
+  }
+};
 export const createResume = async (resume: any) => {
   const pb = pocketbase();
 

@@ -8,7 +8,7 @@ import {
   resumeCreationSchema,
   ResumeCreationSchema,
 } from "@/lib/formValidationSchemas";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -16,8 +16,13 @@ import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import ExperienceForm from "@/components/ExperienceForm";
 import { Experience } from "@/types/resume";
-import { createExperience, createResume, userToResume } from "@/api/resume";
-import { useRouter } from "next/navigation";
+import {
+  createExperience,
+  createResume,
+  resumeRedirect,
+  userToResume,
+} from "@/api/resume";
+import { redirect, useRouter } from "next/navigation";
 import { getUser } from "@/api/auth";
 
 const ResumeForm = () => {
@@ -36,9 +41,19 @@ const ResumeForm = () => {
   const [skills, setSkills] = useState<string[]>([]);
   const [skillInput, setSkillInput] = useState<string>("");
   const [experience, setExperience] = useState<Experience[]>([]);
+  const [user, setUser] = useState<any>(null);
 
   const fileInput = document.getElementById("file-input") as HTMLInputElement;
   const formData = new FormData();
+
+  // TODO: добавить рабочий редирект для резюме
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getUser();
+      // await resumeRedirect(user.resume_id);
+    };
+    fetchUser();
+  }, []);
 
   const onSubmit = async (data: ResumeCreationSchema) => {
     console.log("resume data: ", data);
@@ -68,6 +83,7 @@ const ResumeForm = () => {
         formData.append("about", resume.aboutMyself);
         // formData.append("img", resume.img.files[0]);
 
+        //TODO: сделать добавление картинки к резюме
         if (resume.img) {
           formData.append("img", resume.img.files[0]);
         }
@@ -92,11 +108,12 @@ const ResumeForm = () => {
         end_date: exp.endDate,
       }));
       const experienceData = await createExperience(experiences);
-      const user = await getUser();
+      // const user = await getUser();
       console.log("user: ", user.id);
       const userData = await userToResume(user.id, resume.id);
       console.log("submitted experience data: ", experienceData);
       console.log("test: ", experiences);
+      // Перенос на предыдущую страницу
       // const from = searchParams.get("from") || "/";
       // router.push(from);
       // router.back();
@@ -201,6 +218,7 @@ const ResumeForm = () => {
     }
   };
 
+  // ХУЙНЯ
   // const handleUploadedFile = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   const file = event?.target?.files?.[0];
 
@@ -212,7 +230,6 @@ const ResumeForm = () => {
   const triggerFileSelect = () => {
     document.getElementById("file-input")?.click();
   };
-
   return (
     <div className="mx-auto p-6 ">
       <form
