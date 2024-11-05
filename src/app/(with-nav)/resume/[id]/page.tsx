@@ -421,8 +421,8 @@ const resumePage = () => {
               </h2>
               <Card className="mb-4">
                 <CardContent className="flex flex-col gap-2 p-4">
-                  <Label className="text-gray-500">Phone</Label>
-                  <p>{user?.phone}</p>
+                  {/* <Label className="text-gray-500">Phone</Label>
+                  <p>{user?.phone}</p> */}
                   <Label className="text-gray-500">Email</Label>
                   <p>{user?.email}</p>
                 </CardContent>
