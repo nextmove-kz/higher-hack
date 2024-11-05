@@ -1,36 +1,128 @@
+"use client";
+import { getUser } from "@/api/auth";
+import { getExperience, getResume, getUserByResume } from "@/api/resume";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
-import React from "react";
+import { useParams, useRouter } from "next/navigation";
+import React, { use, useEffect, useState } from "react";
 
-const data = {
-  fullName: "John Doe",
-  age: 25,
-  workExperience: [
-    {
-      company: "Tech Company",
-      startDate: "2020-01-15",
-      endDate: "2022-05-20",
-      jobDescription:
-        "Worked as a full-stack developer, building web applications using Remix.",
-    },
-  ],
-  education: "Bachelor of Computer Science",
-  placesOfStudy: ["MIT", "Community College"],
-  skills: ["JavaScript", "React", "Remix"],
-  expectedSalary: 50000,
-  typeOfEmployment: "Full-time",
-  img: "/placeholder-user_2.jpg",
-  aboutMyself:
-    "I am a passionate developer with a strong interest in web technologies and software development.",
-  phone: "1234567890",
-  email: "example@mail.com",
-  viewed: 123,
-  suitable: 123,
-};
+// const data = {
+//   fullName: "John Doe",
+//   age: 25,
+//   workExperience: [
+//     {
+//       company: "Tech Company",
+//       startDate: "2020-01-15",
+//       endDate: "2022-05-20",
+//       jobDescription:
+//         "Worked as a full-stack developer, building web applications using Remix.",
+//     },
+//   ],
+//   education: "Bachelor of Computer Science",
+//   placesOfStudy: ["MIT", "Community College"],
+//   skills: ["JavaScript", "React", "Remix"],
+//   expectedSalary: 50000,
+//   typeOfEmployment: "Full-time",
+//   img: "/placeholder-user_2.jpg",
+//   aboutMyself:
+//     "I am a passionate developer with a strong interest in web technologies and software development.",
+//   phone: "1234567890",
+//   email: "example@mail.com",
+//   viewed: 123,
+//   suitable: 123,
+// };
+
+interface Resume {
+  id: string;
+  fullName: string;
+  age: number | string;
+  skills: string;
+  expectedSalary: number | string;
+  city: string;
+  education: string;
+  placesOfStudy: string;
+  typeOfEmployment: string;
+  email: string;
+  phoneNumber: string;
+  aboutMyself: string;
+}
+
+// interface Experience {
+//   workExperience: Array<{
+//     id: string;
+//     company: string;
+//     jobDescription: string;
+//     startDate: string;
+//     endDate: string;
+//   }>;
+// }
+
+interface Experience {
+  workExperience: Array<{
+    id: string;
+    company: string;
+    jobDescription: string;
+    startDate: string;
+    endDate: string;
+  }>;
+}
+
+interface User {
+  id: string;
+  email: string;
+}
 
 const resumePage = () => {
+  const [data, setData] = useState<Resume>();
+  const [user, setUser] = useState<User>();
+  const [workExperience, setWorkExperience] = useState<Experience>();
+  const router = useRouter();
+  const id = useParams<{ id: string }>().id;
+
+  useEffect(() => {
+    const fetchResume = async () => {
+      const resumeResponse = await getResume(id);
+      const resume: Resume = {
+        id: resumeResponse.id,
+        fullName: resumeResponse.full_name,
+        age: resumeResponse.age,
+        skills: resumeResponse.skills,
+        expectedSalary: resumeResponse.salary,
+        city: resumeResponse.city,
+        education: resumeResponse.education_levels,
+        placesOfStudy: resumeResponse.education,
+        typeOfEmployment: resumeResponse.employment_type,
+        email: resumeResponse.email,
+        phoneNumber: resumeResponse.phone_number,
+        aboutMyself: resumeResponse.about,
+        // workExperience: resumeResponse.experience.map((exp: any) => ({
+        //   company: exp.company,
+        //   jobDescription: exp.job_description,
+        //   startDate: exp.start_date,
+        //   endDate: exp.end_date,
+        // })),
+      };
+
+      const experienceResponse = await getExperience(resume.id);
+      const experience = experienceResponse.map((exp: any) => ({
+        id: exp.id,
+        company: exp.company_name,
+        jobDescription: exp.description,
+        startDate: exp.start_date,
+        endDate: exp.end_date,
+      }));
+      setWorkExperience({ workExperience: experience });
+      console.log("workExperience", workExperience);
+      const user = await getUserByResume(resume.id);
+      console.log("user", user);
+      console.log("data", resume);
+      setUser(user);
+      setData(resume);
+    };
+    fetchResume();
+  }, [id]);
   return (
     <div className="mx-auto p-6">
       <div className="rounded-xl">
@@ -75,7 +167,7 @@ const resumePage = () => {
               <div className="pl-5 flex items-center space-x-4 p-2 ml-2 mb-2">
                 <div>
                   <Image
-                    src={data.img}
+                    src={"/placeholder-user_2.jpg"}
                     alt="Profile picture"
                     width={200}
                     height={200}
@@ -110,7 +202,7 @@ const resumePage = () => {
                       <p className="text-white text-2xl font-semibold">
                         {"Name: "}
                       </p>
-                      <p className="text-white text-2xl ml-2">{` ${data.fullName}`}</p>
+                      <p className="text-white text-2xl ml-2">{` ${data?.fullName}`}</p>
                       {/* <GoTriangleLeft
                         color="white"
                         size={24}
@@ -121,7 +213,7 @@ const resumePage = () => {
                       <p className="text-white text-xl font-semibold">
                         {"Age: "}
                       </p>
-                      <p className="text-white text-xl ml-2">{data.age}</p>
+                      <p className="text-white text-xl ml-2">{data?.age}</p>
                       {/* <GoTriangleLeft color="white" size={24} /> */}
                     </div>
                   </div>
@@ -134,9 +226,10 @@ const resumePage = () => {
                 height={400}
                 className="absolute bottom-0 right-5 "
               />
+              {/* TODO: Add stats
               <div className="absolute bottom-1 left-6 flex">
                 <p className="text-md text-gray-300 font-medium text-center">{`Suitable vacancies: ${data.suitable} • Viewed: ${data.viewed}`}</p>
-              </div>
+              </div> */}
             </div>
           </CardHeader>
           <div>
@@ -160,8 +253,9 @@ const resumePage = () => {
                   <rect width="20" height="14" x="2" y="6" rx="2" />
                 </svg>
               </h2>
-              {data.workExperience.length > 0 ? (
-                data.workExperience.map((job, index) => (
+              {Array.isArray(workExperience?.workExperience) &&
+              workExperience.workExperience.length > 0 ? (
+                workExperience?.workExperience.map((job, index) => (
                   <Card className="mb-4" key={index}>
                     <CardContent className="flex flex-col gap-2 p-4">
                       <div className="gap-4 relative">
@@ -208,12 +302,14 @@ const resumePage = () => {
                 </svg>
               </h2>
               <div className="flex gap-2">
-                {data.skills.length > 0 ? (
-                  data.skills.map((skill, index) => (
-                    <div key={skill + index}>
-                      <Badge>{skill}</Badge>
-                    </div>
-                  ))
+                {data?.skills && data.skills.split(",").length > 0 ? (
+                  data?.skills
+                    .split(",")
+                    .map((skill: string, index: number) => (
+                      <div key={skill + index}>
+                        <Badge>{skill}</Badge>
+                      </div>
+                    ))
                 ) : (
                   <p>No skills added</p>
                 )}
@@ -238,21 +334,24 @@ const resumePage = () => {
                   <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
                 </svg>
               </h2>
-              {data.education.length > 0 ? (
+              {data?.education && data?.education.length > 0 ? (
                 <Card className="mb-4">
                   <CardContent className="flex flex-col gap-2 p-4">
                     <Label className="text-gray-500">Education degree</Label>
-                    <p>{data.education}</p>
+                    <p>{data?.education}</p>
                     <div className="flex gap-2 relative">
                       <div>
                         <Label className="text-gray-500">Places of Study</Label>
                         <div className="flex gap-2">
-                          {data.placesOfStudy.length > 0 ? (
-                            data.placesOfStudy.map((place, index) => (
-                              <div key={place + index}>
-                                <p>{`${index + 1}. ${place}`}</p>
-                              </div>
-                            ))
+                          {data?.placesOfStudy &&
+                          data?.placesOfStudy.split(", ").length > 0 ? (
+                            data?.placesOfStudy
+                              .split(", ")
+                              .map((place, index) => (
+                                <div key={place + index}>
+                                  <p>{`${index + 1}. ${place}`}</p>
+                                </div>
+                              ))
                           ) : (
                             <p>No places added</p>
                           )}
@@ -289,12 +388,12 @@ const resumePage = () => {
               <Card className="mb-4">
                 <CardContent className="flex flex-col gap-2 p-4">
                   <Label className="text-gray-500">Expected Salary</Label>
-                  <p>{data.expectedSalary}</p>
+                  <p>{data?.expectedSalary}</p>
                   <Label className="text-gray-500">Type of Employment</Label>
-                  <p>{data.typeOfEmployment}</p>
+                  <p>{data?.typeOfEmployment}</p>
                   <div className="mt-4">
                     <Label className="text-gray-500">About Myself</Label>
-                    <p>{data.aboutMyself}</p>
+                    <p>{data?.aboutMyself}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -323,9 +422,9 @@ const resumePage = () => {
               <Card className="mb-4">
                 <CardContent className="flex flex-col gap-2 p-4">
                   <Label className="text-gray-500">Phone</Label>
-                  <p>{data.phone}</p>
+                  <p>{user?.phone}</p>
                   <Label className="text-gray-500">Email</Label>
-                  <p>{data.email}</p>
+                  <p>{user?.email}</p>
                 </CardContent>
               </Card>
             </section>

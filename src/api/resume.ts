@@ -4,9 +4,25 @@ import { pocketbase } from "./pocketbase";
 
 export const getResume = async (id: string) => {
   const pb = pocketbase();
-  const resume = await pb.collection("resume").getOne(id);
+  const resume = await pb.collection("resume").getOne(id, {
+    expand: "experience",
+  });
   return resume;
 };
+
+export const getUserByResume = async (id: string) => {
+  const pb = pocketbase();
+  const user = await pb.collection("users").getFirstListItem(`resume="${id}"`);
+  return user;
+}
+
+export const getExperience = async (id: string) => {
+  const pb = pocketbase();
+  const experience = await pb.collection("experience").getFullList({
+    filter: `resume="${id}"`,
+  });
+  return experience;
+}
 
 export const userToResume = async (userId: string, resume: string) => {
   const pb = pocketbase();

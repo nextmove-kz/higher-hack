@@ -43,18 +43,25 @@ const ResumeForm = () => {
   const [experience, setExperience] = useState<Experience[]>([]);
   const [user, setUser] = useState<any>(null);
 
-  const fileInput = document.getElementById("file-input") as HTMLInputElement;
-  const formData = new FormData();
+  // const fileInput = document.getElementById("file-input") as HTMLInputElement;
 
   // TODO: добавить рабочий редирект для резюме
-  useEffect(() => {
-    const fetchUser = async () => {
-      const user = await getUser();
-      // await resumeRedirect(user.resume_id);
-    };
-    fetchUser();
-  }, []);
-
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const user = await getUser();
+  //     await resumeRedirect(user.resume_id, router);
+  //   };
+  //   fetchUser();
+  // }, [router]);
+  // useEffect(() => {
+  //   const redirectUser = async () => {
+  //     const user = await getUser();
+  //     if (user.resume_id) {
+  //       router.push(`/resume/${user.resume_id}`);
+  //     }
+  //   };
+  //   redirectUser();
+  // }, [router]);
   const onSubmit = async (data: ResumeCreationSchema) => {
     console.log("resume data: ", data);
     console.log("experience data: ", experience);
@@ -73,6 +80,7 @@ const ResumeForm = () => {
       //   img: resume.img,
       // });
       const formattedData = (resume: any) => {
+        const formData = new FormData();
         formData.append("full_name", resume.fullName);
         formData.append("skills", resume.skills.join(", "));
         formData.append("salary", resume.expectedSalary);
@@ -85,7 +93,7 @@ const ResumeForm = () => {
 
         //TODO: сделать добавление картинки к резюме
         if (resume.img) {
-          formData.append("img", resume.img.files[0]);
+          formData.append("img", resume.img[0]);
         }
 
         // fileInput.addEventListener("change", function () {
@@ -230,6 +238,7 @@ const ResumeForm = () => {
   const triggerFileSelect = () => {
     document.getElementById("file-input")?.click();
   };
+  // encType="multipart/form-data"
   return (
     <div className="mx-auto p-6 ">
       <form
