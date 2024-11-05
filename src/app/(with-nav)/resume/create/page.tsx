@@ -16,7 +16,8 @@ import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import ExperienceForm from "@/components/ExperienceForm";
 import { Experience } from "@/types/resume";
-import { createExperience, createResume } from "@/api/resume";
+import { createExperience, createResume, userToResume } from "@/api/resume";
+import { useRouter } from "next/navigation";
 
 const ResumeForm = () => {
   const {
@@ -26,6 +27,7 @@ const ResumeForm = () => {
   } = useForm<ResumeCreationSchema>({
     resolver: zodResolver(resumeCreationSchema),
   });
+  const router = useRouter();
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [options, setOptions] = useState<string[]>([]);
@@ -35,6 +37,7 @@ const ResumeForm = () => {
   const [experience, setExperience] = useState<Experience[]>([]);
 
   const fileInput = document.getElementById("file-input") as HTMLInputElement;
+  const formData = new FormData();
 
   const onSubmit = async (data: ResumeCreationSchema) => {
     console.log("resume data: ", data);
@@ -54,7 +57,6 @@ const ResumeForm = () => {
       //   img: resume.img,
       // });
       const formattedData = (resume: any) => {
-        const formData = new FormData();
         formData.append("full_name", resume.fullName);
         formData.append("skills", resume.skills.join(", "));
         formData.append("salary", resume.expectedSalary);
@@ -63,13 +65,13 @@ const ResumeForm = () => {
         formData.append("education", resume.placesOfStudy.join(", "));
         formData.append("employment_type", resume.typeOfEmployment);
         formData.append("about", resume.aboutMyself);
-
-        fileInput.addEventListener("change", function () {
-          if (fileInput.files && fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            formData.append("img", file);
-          }
-        });
+        formData.append("img", resume.img.files[0]);
+        // fileInput.addEventListener("change", function () {
+        //   if (fileInput.files && fileInput.files.length > 0) {
+        //     const file = fileInput.files[0];
+        //     formData.append("img", file);
+        //   }
+        // });
 
         return formData;
       };
@@ -84,13 +86,37 @@ const ResumeForm = () => {
         end_date: exp.endDate,
       }));
       const experienceData = await createExperience(experiences);
+      const userData = await userToResume(resume.id);
       console.log("submitted experience data: ", experienceData);
       console.log("test: ", experiences);
+      // router.back();
     } catch (error) {
       console.log(error);
     }
   };
 
+  // async function imageToBlob(imageFile: File): Promise<Blob> {
+  //   return new Promise<Blob>((resolve, reject) => {
+  //     const reader = new FileReader();
+
+  //     reader.onloadend = () => {
+  //       const result = reader.result;
+  //       if (result instanceof ArrayBuffer) {
+  //         resolve(new Blob([result]));
+  //       } else if (result) {
+  //         resolve(new Blob([new Uint8Array(result as ArrayBufferLike)]));
+  //       } else {
+  //         reject(new Error("Ошибка при чтении файла изображения."));
+  //       }
+  //     };
+
+  //     reader.onerror = () => {
+  //       reject(new Error("Ошибка при чтении файла изображения."));
+  //     };
+
+  //     reader.readAsArrayBuffer(imageFile);
+  //   });
+  // }
   const submitWorkExperience = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
