@@ -1,6 +1,6 @@
 "use server";
 import { pocketbase } from "./pocketbase";
-import { UsersRoleOptions } from "./api_types";
+import { AuthSystemFields, UsersRoleOptions } from "./api_types";
 import { AuthModel, RecordModel } from "pocketbase";
 import { cookies } from "next/headers";
 
@@ -60,7 +60,15 @@ export const isLoggedIn = async () => {
 };
 
 export const getUser = async () => {
-  return pocketbase().authStore.model as Promise<RecordModel>;
+  return pocketbase().authStore.model as Promise<AuthSystemFields>;
+};
+
+export const getUserById = async (userId: string) => {
+  const { items, totalItems } = await pocketbase()
+    .collection("users")
+    .getList(1, 1, { filter: `id = "${userId}"` });
+
+  return totalItems > 0 ? items[0] : null;
 };
 
 export const existsUser = async (email: string) => {
