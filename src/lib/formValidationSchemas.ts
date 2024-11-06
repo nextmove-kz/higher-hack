@@ -35,13 +35,9 @@ export const signUpSchema = z
 
 export type SignUpSchema = z.infer<typeof signUpSchema>;
 
-const MAX_FILE_SIZE = 20000000;
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
+
+const MAX_FILE_SIZE = 200000000;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 export const resumeCreationSchema = z.object({
   fullName: z.string().nonempty({ message: "Full name is required!" }),
@@ -86,34 +82,37 @@ export const resumeCreationSchema = z.object({
     .optional()
     .default([]),
 
-  education: z.string().nonempty({ message: "Education is required!" }),
-  placesOfStudy: z.array(z.string()).optional().default([]),
-  skills: z.array(z.string()).optional().default([]),
-  expectedSalary: z.preprocess(
-    (value) => Number(value),
-    z
+    education: z.enum(["bachelor", "masters", "high school", "doctorate","college"],
+      {
+        errorMap: () => ({message: "Please select a valud type of employment"})
+      }
+    ),
+    placesOfStudy: z.array(z.string()).optional().default([]),
+    skills: z.array(z.string()).optional().default([]),
+    expectedSalary: z.preprocess((value) => Number(value), z
       .number({ invalid_type_error: "Salary must be a number" })
       .positive({ message: "Salary must be a positive number" })
-  ),
-  typeOfEmployment: z.enum(
-    ["Full-time", "Part-time", "Freelance", "Contract"],
-    {
-      errorMap: () => ({ message: "Please select a valid type of employment" }),
-    }
-  ),
-  img: z
-    .any()
-    .refine((file) => file?.size <= MAX_FILE_SIZE, {
-      message: `Max file size is${MAX_FILE_SIZE / 1000000}MB`,
-    })
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      "Only .jpg, .jpeg, .png and .webp formats are supported."
-    )
-    .optional(),
-  aboutMyself: z
-    .string()
-    .min(10, { message: "About myself must be at least 10 characters" }),
+    ),
+    typeOfEmployment: z.enum(
+      ["full_time", "part_time", "project", "voluntary", "internship"],
+      {
+        errorMap: () => ({ message: "Please select a valid type of employment" }),
+      }
+    ),
+    img: z
+    .instanceof(File).optional()
+    // .refine((file) => file?.size <= MAX_FILE_SIZE, {
+    //   message: `Max file size is${MAX_FILE_SIZE / 1000000}MB`,
+    // })
+    // .refine(
+    //   (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+    //   "Only .jpg, .jpeg, .png and .webp formats are supported."
+    // )
+    // .optional()
+    ,
+    aboutMyself: z
+      .string()
+      .min(10, { message: "About myself must be at least 10 characters" }),
 });
 
 export type ResumeCreationSchema = z.infer<typeof resumeCreationSchema>;

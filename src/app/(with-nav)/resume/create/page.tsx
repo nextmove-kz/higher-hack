@@ -8,7 +8,7 @@ import {
   resumeCreationSchema,
   ResumeCreationSchema,
 } from "@/lib/formValidationSchemas";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -16,15 +16,26 @@ import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import ExperienceForm from "@/components/ExperienceForm";
 import { Experience } from "@/types/resume";
+import {
+  createExperience,
+  createResume,
+  resumeRedirect,
+  userToResume,
+} from "@/api/resume";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
+import { getUser } from "@/api/auth";
 
 const ResumeForm = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<ResumeCreationSchema>({
     resolver: zodResolver(resumeCreationSchema),
   });
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [options, setOptions] = useState<string[]>([]);
@@ -32,9 +43,118 @@ const ResumeForm = () => {
   const [skills, setSkills] = useState<string[]>([]);
   const [skillInput, setSkillInput] = useState<string>("");
   const [experience, setExperience] = useState<Experience[]>([]);
+  const [user, setUser] = useState<any>(null);
 
-  const onSubmit = (data: ResumeCreationSchema) => {};
+  // const fileInput = document.getElementById("file-input") as HTMLInputElement;
 
+  // TODO: добавить рабочий редирект для резюме
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     const user = await getUser();
+  //     await resumeRedirect(user.resume_id, router);
+  //   };
+  //   fetchUser();
+  // }, [router]);
+  // useEffect(() => {
+  //   const redirectUser = async () => {
+  //     const user = await getUser();
+  //     if (user.resume_id) {
+  //       router.push(`/resume/${user.resume_id}`);
+  //     }
+  //   };
+  //   redirectUser();
+  // }, [router]);
+  const onSubmit = async (data: ResumeCreationSchema) => {
+    console.log("resume data: ", data);
+    console.log("experience data: ", experience);
+    try {
+      // const formattedData = (resume: any) => ({
+      //   full_name: resume.fullName,
+      //   skills: resume.skills.join(", "),
+      //   salary: resume.expectedSalary,
+      //   city: resume.city,
+      //   education_levels: resume.education,
+      //   education: resume.placesOfStudy.join(", "),
+      //   employment_type: resume.typeOfEmployment,
+      //   email: resume.email,
+      //   phone_number: resume.phone,
+      //   about: resume.aboutMyself,
+      //   img: resume.img,
+      // });
+      const formattedData = (resume: any) => {
+        const formData = new FormData();
+        formData.append("full_name", resume.fullName);
+        formData.append("age", resume.age);
+        formData.append("skills", resume.skills.join(", "));
+        formData.append("salary", resume.expectedSalary);
+        formData.append("city", resume.city);
+        formData.append("education_levels", resume.education);
+        formData.append("education", resume.placesOfStudy.join(", "));
+        formData.append("employment_type", resume.typeOfEmployment);
+        formData.append("about", resume.aboutMyself);
+        // formData.append("img", resume.img.files[0]);
+
+        //TODO: сделать добавление картинки к резюме
+        if (resume.img) {
+          formData.append("img", resume.img);
+        }
+
+        // fileInput.addEventListener("change", function () {
+        //   if (fileInput.files && fileInput.files.length > 0) {
+        //     const file = fileInput.files[0];
+        //     formData.append("img", file);
+        //   }
+        // });
+        console.log(formData.get("img"));
+        return formData;
+      };
+
+      const resume = await createResume(formattedData(data));
+      console.log("submitted resume data: ", resume);
+      const experiences = experience.map((exp) => ({
+        resume: resume.id,
+        company_name: exp.company,
+        description: exp.jobDescription,
+        start_date: exp.startDate,
+        end_date: exp.endDate,
+      }));
+      const experienceData = await createExperience(experiences);
+      const user = await getUser();
+      // console.log("user: ", user.id);
+      const userData = await userToResume(user.id, resume.id);
+      console.log("submitted experience data: ", experienceData);
+      console.log("test: ", experiences);
+      // Перенос на предыдущую страницу
+      const from = searchParams.get("from") || "/";
+      router.push(from);
+      // router.back();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // async function imageToBlob(imageFile: File): Promise<Blob> {
+  //   return new Promise<Blob>((resolve, reject) => {
+  //     const reader = new FileReader();
+
+  //     reader.onloadend = () => {
+  //       const result = reader.result;
+  //       if (result instanceof ArrayBuffer) {
+  //         resolve(new Blob([result]));
+  //       } else if (result) {
+  //         resolve(new Blob([new Uint8Array(result as ArrayBufferLike)]));
+  //       } else {
+  //         reject(new Error("Ошибка при чтении файла изображения."));
+  //       }
+  //     };
+
+  //     reader.onerror = () => {
+  //       reject(new Error("Ошибка при чтении файла изображения."));
+  //     };
+
+  //     reader.readAsArrayBuffer(imageFile);
+  //   });
+  // }
   const submitWorkExperience = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -44,7 +164,7 @@ const ResumeForm = () => {
   };
 
   const convertToExperienceList = (obj: any): Experience[] => {
-    /* 
+    /*
     we have have object with entries
     workExperience.<index>.company
     workExperience.<index>.endDate
@@ -105,18 +225,30 @@ const ResumeForm = () => {
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+      setValue("img", file);
+      console.log("file", file);
     }
   };
+
+  // ХУЙНЯ
+  // const handleUploadedFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event?.target?.files?.[0];
+
+  //   const urlImage = URL.createObjectURL(file: any);
+
+  //   setPreview(urlImage);
+  // };
 
   const triggerFileSelect = () => {
     document.getElementById("file-input")?.click();
   };
-
+  // encType="multipart/form-data"
   return (
     <div className="mx-auto p-6 ">
       <form
         className="flex flex-col gap-6 rounded-xl"
         onSubmit={handleSubmit(onSubmit)}
+        encType="multipart/form-data"
       >
         <div className="rounded-xl">
           <Card className="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-xl">
@@ -250,7 +382,7 @@ const ResumeForm = () => {
                   alt=""
                   width={200}
                   height={200}
-                  className="absolute bottom-0 right-5 "
+                  className="absolute bottom-0 right-5 img-nondragable"
                   priority={true}
                 />
               </div>
@@ -404,10 +536,11 @@ const ResumeForm = () => {
                       className="ring-1 ring-gray-300 p-2 rounded-md text-sm w-full"
                       {...register("education")}
                     >
-                      <option value="Associate">Associate's degree</option>
-                      <option value="Bachelor">Bachelor's degree</option>
-                      <option value="Master">Master's degree</option>
-                      <option value="Doctor">Doctoral degree</option>
+                      <option value="bachelor">bachelor's degree</option>
+                      <option value="masters">master's degree</option>
+                      <option value="high school">high school</option>
+                      <option value="doctorate">Doctoral degree</option>
+                      <option value="college">college</option>
                     </select>
                     {errors.typeOfEmployment?.message && (
                       <p className="text-xs text-red-400">
@@ -528,10 +661,11 @@ const ResumeForm = () => {
                       className="ring-[1px] ring-gray-300 p-2 rounded-md text-sm w-full"
                       {...register("typeOfEmployment")}
                     >
-                      <option value="Full-time">Full-time</option>
-                      <option value="Part-time">Part-time</option>
-                      <option value="Freelance">Freelance</option>
-                      <option value="Contract">Contract</option>
+                      <option value="full_time">Full-time</option>
+                      <option value="part_time">Part-time</option>
+                      <option value="project">Project</option>
+                      <option value="internship">internship</option>
+                      <option value="volutury">volutury</option>
                     </select>
                     {errors.typeOfEmployment?.message && (
                       <p className="text-xs text-red-400">
