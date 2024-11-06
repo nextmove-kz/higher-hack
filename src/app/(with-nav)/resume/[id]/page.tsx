@@ -1,3 +1,6 @@
+import { getUser, getUserById } from "@/api/auth";
+import { getResume, hasResume, resumeById } from "@/api/resume";
+import BackButton from "@/components/BackButton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -5,33 +8,43 @@ import Image from "next/image";
 import React from "react";
 import { GoTriangleLeft, GoTriangleRight } from "react-icons/go";
 
-const data = {
-  fullName: "John Doe",
-  age: 25,
-  workExperience: [
-    {
-      company: "Tech Company",
-      startDate: "2020-01-15",
-      endDate: "2022-05-20",
-      jobDescription:
-        "Worked as a full-stack developer, building web applications using Remix.",
-    },
-  ],
-  education: "Bachelor of Computer Science",
-  placesOfStudy: ["MIT", "Community College"],
-  skills: ["JavaScript", "React", "Remix"],
-  expectedSalary: 50000,
-  typeOfEmployment: "Full-time",
-  img: "/placeholder-user_2.jpg",
-  aboutMyself:
-    "I am a passionate developer with a strong interest in web technologies and software development.",
-  phone: "1234567890",
-  email: "example@mail.com",
-  viewed: 123,
-  suitable: 123,
-};
+const resumePage = async ({ params }: { params: { id: string } }) => {
+  const user = await getUserById(params.id);
+  if (!user) {
+    return (
+      <ErrorPage text={`Пользоваетеля с id = ${params.id} не существует`} />
+    );
+  }
 
-const resumePage = () => {
+  const resumeCheck = await hasResume(params.id);
+  if (!resumeCheck) {
+    return <ErrorPage text={`У пользоваетеля ${user.id} нет резюме`} />;
+  }
+
+  const resume = await resumeById(params.id);
+
+  const data = {
+    fullName: resume.full_name,
+    workExperience: [
+      {
+        company: "Tech Company",
+        startDate: "2020-01-15",
+        endDate: "2022-05-20",
+        jobDescription:
+          "Worked as a full-stack developer, building web applications using Remix.",
+      },
+    ],
+    education: resume.education_levels,
+    placesOfStudy: [resume.education],
+    skills: resume.skills,
+    expectedSalary: resume.salary,
+    typeOfEmployment: resume.employment_type,
+    img: "/placeholder-user_2.jpg",
+    aboutMyself: resume.about,
+    phone: resume.phone_number,
+    email: resume.email,
+  };
+
   return (
     <div className="mx-auto p-6">
       <div className="rounded-xl">
@@ -112,18 +125,6 @@ const resumePage = () => {
                         {"Name: "}
                       </p>
                       <p className="text-white text-2xl ml-2">{` ${data.fullName}`}</p>
-                      {/* <GoTriangleLeft
-                        color="white"
-                        size={24}
-                        className="mt-1"
-                      /> */}
-                    </div>
-                    <div className="flex">
-                      <p className="text-white text-xl font-semibold">
-                        {"Age: "}
-                      </p>
-                      <p className="text-white text-xl ml-2">{data.age}</p>
-                      {/* <GoTriangleLeft color="white" size={24} /> */}
                     </div>
                   </div>
                 </div>
@@ -135,9 +136,6 @@ const resumePage = () => {
                 height={400}
                 className="absolute bottom-0 right-5 "
               />
-              <div className="absolute bottom-1 left-6 flex">
-                <p className="text-md text-gray-300 font-medium text-center">{`Suitable vacancies: ${data.suitable} • Viewed: ${data.viewed}`}</p>
-              </div>
             </div>
           </CardHeader>
           <div>
@@ -209,12 +207,14 @@ const resumePage = () => {
                 </svg>
               </h2>
               <div className="flex gap-2">
-                {data.skills.length > 0 ? (
-                  data.skills.map((skill, index) => (
-                    <div key={skill + index}>
-                      <Badge>{skill}</Badge>
-                    </div>
-                  ))
+                {data.skills && data.skills.length > 0 ? (
+                  data.skills.split(",").map((item, index) => {
+                    return (
+                      <div key={index}>
+                        <Badge>{item}</Badge>
+                      </div>
+                    );
+                  })
                 ) : (
                   <p>No skills added</p>
                 )}
@@ -239,7 +239,7 @@ const resumePage = () => {
                   <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
                 </svg>
               </h2>
-              {data.education.length > 0 ? (
+              {resume.education && resume.education.length > 0 ? (
                 <Card className="mb-4">
                   <CardContent className="flex flex-col gap-2 p-4">
                     <Label className="text-gray-500">Education degree</Label>
@@ -250,7 +250,7 @@ const resumePage = () => {
                         <div className="flex gap-2">
                           {data.placesOfStudy.length > 0 ? (
                             data.placesOfStudy.map((place, index) => (
-                              <div key={place + index}>
+                              <div key={place || "" + index}>
                                 <p>{`${index + 1}. ${place}`}</p>
                               </div>
                             ))
@@ -293,10 +293,14 @@ const resumePage = () => {
                   <p>{data.expectedSalary}</p>
                   <Label className="text-gray-500">Type of Employment</Label>
                   <p>{data.typeOfEmployment}</p>
-                  <div className="mt-4">
-                    <Label className="text-gray-500">About Myself</Label>
-                    <p>{data.aboutMyself}</p>
-                  </div>
+                  {data.aboutMyself && (
+                    <div className="mt-4">
+                      <Label className="text-gray-500">About Myself</Label>
+                      <div
+                        dangerouslySetInnerHTML={{ __html: data.aboutMyself }}
+                      />
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </section>
@@ -334,6 +338,16 @@ const resumePage = () => {
         </Card>
       </div>
     </div>
+  );
+};
+
+const ErrorPage = ({ text }: { text: string }) => {
+  return (
+    <>
+      <div className="flex items-center justify-center">
+        <h1 className="text-lg font-bold">{text}</h1> <BackButton />
+      </div>
+    </>
   );
 };
 
