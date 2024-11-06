@@ -82,7 +82,7 @@ export const resumeCreationSchema = z.object({
     .optional()
     .default([]),
 
-    education: z.enum(["bachelor", "masters", "high_school", "doctorate","college"],
+    education: z.enum(["bachelor", "masters", "high school", "doctorate","college"],
       {
         errorMap: () => ({message: "Please select a valud type of employment"})
       }
@@ -100,7 +100,7 @@ export const resumeCreationSchema = z.object({
       }
     ),
     img: z
-    .any()
+    .instanceof(File).optional()
     // .refine((file) => file?.size <= MAX_FILE_SIZE, {
     //   message: `Max file size is${MAX_FILE_SIZE / 1000000}MB`,
     // })

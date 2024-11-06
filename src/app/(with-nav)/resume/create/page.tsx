@@ -22,18 +22,20 @@ import {
   resumeRedirect,
   userToResume,
 } from "@/api/resume";
-import { redirect, useRouter } from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import { getUser } from "@/api/auth";
 
 const ResumeForm = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<ResumeCreationSchema>({
     resolver: zodResolver(resumeCreationSchema),
   });
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [options, setOptions] = useState<string[]>([]);
@@ -82,6 +84,7 @@ const ResumeForm = () => {
       const formattedData = (resume: any) => {
         const formData = new FormData();
         formData.append("full_name", resume.fullName);
+        formData.append("age", resume.age);
         formData.append("skills", resume.skills.join(", "));
         formData.append("salary", resume.expectedSalary);
         formData.append("city", resume.city);
@@ -93,7 +96,7 @@ const ResumeForm = () => {
 
         //TODO: сделать добавление картинки к резюме
         if (resume.img) {
-          formData.append("img", resume.img[0]);
+          formData.append("img", resume.img);
         }
 
         // fileInput.addEventListener("change", function () {
@@ -102,7 +105,7 @@ const ResumeForm = () => {
         //     formData.append("img", file);
         //   }
         // });
-
+        console.log(formData.get("img"));
         return formData;
       };
 
@@ -116,14 +119,14 @@ const ResumeForm = () => {
         end_date: exp.endDate,
       }));
       const experienceData = await createExperience(experiences);
-      // const user = await getUser();
-      console.log("user: ", user.id);
+      const user = await getUser();
+      // console.log("user: ", user.id);
       const userData = await userToResume(user.id, resume.id);
       console.log("submitted experience data: ", experienceData);
       console.log("test: ", experiences);
       // Перенос на предыдущую страницу
-      // const from = searchParams.get("from") || "/";
-      // router.push(from);
+      const from = searchParams.get("from") || "/";
+      router.push(from);
       // router.back();
     } catch (error) {
       console.log(error);
@@ -222,6 +225,7 @@ const ResumeForm = () => {
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+      setValue("img", file);
       console.log("file", file);
     }
   };
@@ -244,6 +248,7 @@ const ResumeForm = () => {
       <form
         className="flex flex-col gap-6 rounded-xl"
         onSubmit={handleSubmit(onSubmit)}
+        encType="multipart/form-data"
       >
         <div className="rounded-xl">
           <Card className="w-full max-w-4xl mx-auto bg-white shadow-lg rounded-xl">
@@ -377,7 +382,7 @@ const ResumeForm = () => {
                   alt=""
                   width={200}
                   height={200}
-                  className="absolute bottom-0 right-5 "
+                  className="absolute bottom-0 right-5 img-nondragable"
                   priority={true}
                 />
               </div>

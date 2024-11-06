@@ -24,6 +24,20 @@ export const getExperience = async (id: string) => {
   return experience;
 }
 
+export const getImgUrl = async (id: string) => {
+  try {
+  const pb = pocketbase();
+  const record = await pb.collection('resume').getOne(id);
+  const firstFilename = record.img[0];
+  const url = pb.files.getUrl(record, firstFilename);
+  // const url = pocketbase.records.getFileUrl(record, record.imageField);
+  return url;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
 export const userToResume = async (userId: string, resume: string) => {
   const pb = pocketbase();
   const updatedUser = await pb.collection("users").update(userId, {

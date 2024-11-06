@@ -1,6 +1,11 @@
 "use client";
 import { getUser } from "@/api/auth";
-import { getExperience, getResume, getUserByResume } from "@/api/resume";
+import {
+  getExperience,
+  getImgUrl,
+  getResume,
+  getUserByResume,
+} from "@/api/resume";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -45,6 +50,7 @@ interface Resume {
   placesOfStudy: string;
   typeOfEmployment: string;
   email: string;
+  img: any;
   phoneNumber: string;
   aboutMyself: string;
 }
@@ -84,6 +90,7 @@ const resumePage = () => {
   useEffect(() => {
     const fetchResume = async () => {
       const resumeResponse = await getResume(id);
+      const avatar = await getImgUrl(resumeResponse.id);
       const resume: Resume = {
         id: resumeResponse.id,
         fullName: resumeResponse.full_name,
@@ -95,6 +102,7 @@ const resumePage = () => {
         placesOfStudy: resumeResponse.education,
         typeOfEmployment: resumeResponse.employment_type,
         email: resumeResponse.email,
+        img: avatar,
         phoneNumber: resumeResponse.phone_number,
         aboutMyself: resumeResponse.about,
         // workExperience: resumeResponse.experience.map((exp: any) => ({
@@ -167,7 +175,7 @@ const resumePage = () => {
               <div className="pl-5 flex items-center space-x-4 p-2 ml-2 mb-2">
                 <div>
                   <Image
-                    src={"/placeholder-user_2.jpg"}
+                    src={data?.img}
                     alt="Profile picture"
                     width={200}
                     height={200}
@@ -224,7 +232,7 @@ const resumePage = () => {
                 alt=""
                 width={400}
                 height={400}
-                className="absolute bottom-0 right-5 "
+                className="absolute bottom-0 right-5 img-nondragable"
               />
               {/* TODO: Add stats
               <div className="absolute bottom-1 left-6 flex">
